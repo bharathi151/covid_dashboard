@@ -1,0 +1,1043 @@
+{
+    "swagger": "2.0",
+    "host": "127.0.0.1:8000",
+    "basePath": "/api/covid_dashboard/",
+    "info": {
+        "version": "1.0.0",
+        "title": "Simple Covid 19 DashBoard API",
+        "description": "A simple API to learn how to write OpenAPI Specification"
+    },
+    "schemes": [
+        "http",
+        "https"
+    ],
+    "consumes": [
+        "application/json"
+    ],
+    "produces": [
+        "application/json"
+    ],
+    "securityDefinitions": {
+        "oauth": {
+            "tokenUrl": "http://auth.ibtspl.com/oauth2/",
+            "flow": "password",
+            "scopes": {
+                "read": "read users",
+                "write": "create users",
+                "update": "update users",
+                "delete": "delete users",
+                "superuser": "super user permission"
+            },
+            "type": "oauth2"
+        }
+    },
+    "definitions": {
+        "UserDetails": {
+            "type": "object",
+            "properties": {
+                "user_name": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "confirm_password": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "user_name",
+                "password",
+                "confirm_password"
+            ]
+        },
+        "SignInDetails": {
+            "type": "object",
+            "properties": {
+                "user_name": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "user_name",
+                "password"
+            ]
+        },
+        "DayTotalCountsUpdates": {
+            "type": "object",
+            "properties": {
+                "total_confirmed_cases": {
+                    "type": "integer"
+                },
+                "total_deaths": {
+                    "type": "integer"
+                },
+                "total_recovered_cases": {
+                    "type": "integer"
+                },
+                "total_active_cases": {
+                    "type": "integer"
+                }
+            },
+            "required": [
+                "total_confirmed_cases",
+                "total_deaths",
+                "total_recovered_cases",
+                "total_active_cases"
+            ]
+        },
+        "DailyCountsUpdates": {
+            "type": "object",
+            "properties": {
+                "total_confirmed_cases": {
+                    "type": "integer"
+                },
+                "total_deaths": {
+                    "type": "integer"
+                },
+                "total_recovered_cases": {
+                    "type": "integer"
+                }
+            },
+            "required": [
+                "total_confirmed_cases",
+                "total_deaths",
+                "total_recovered_cases"
+            ]
+        },
+        "StateTotalCountsUpdateOnADay": {
+            "allOf": [{
+                    "type": "object",
+                    "properties": {
+                        "state_name": {
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "state_name"
+                    ]
+                },
+                {
+                    "$ref": "#/definitions/DayTotalCountsUpdates"
+                }
+
+            ]
+        },
+        "StatsResponseForUpdateAndPost": {
+            "allOf": [{
+                    "$ref": "#/definitions/DailyCountsUpdates"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "mandal_id": {
+                            "type": "integer"
+                        },
+                        "date": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    },
+                    "required": [
+                        "mandal_id",
+                        "date"
+                    ]
+                }
+
+            ]
+        },
+        "StateDailyCountsUpdateOnADay": {
+            "allOf": [{
+                    "type": "object",
+                    "properties": {
+                        "state_name": {
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "state_name"
+                    ]
+                },
+                {
+                    "$ref": "#/definitions/DailyCountsUpdates"
+                }
+
+            ]
+        },
+        "DailyCountsWithDate": {
+            "allOf": [{
+                    "$ref": "#/definitions/DailyCountsUpdates"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "date": {
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "date"
+                    ]
+                }
+            ]
+        },
+        "StateTotalCountsUpdateOnADayWithDate": {
+            "allOf": [{
+                    "$ref": "#/definitions/DayTotalCountsUpdates"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "date": {
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "date"
+                    ]
+                }
+            ]
+        },
+        "DistrictTotalCountsUpdateOnADay": {
+            "allOf": [{
+                    "type": "object",
+                    "properties": {
+                        "district_name": {
+                            "type": "string"
+                        },
+                        "district_id": {
+                            "type": "integer"
+                        }
+                    },
+                    "required": [
+                        "district_name",
+                        "district_id"
+                    ]
+                },
+                {
+                    "$ref": "#/definitions/DayTotalCountsUpdates"
+                }
+
+            ]
+        },
+        "DistrictDailyCountsUpdateOnADay": {
+            "allOf": [{
+                    "type": "object",
+                    "properties": {
+                        "district_name": {
+                            "type": "string"
+                        },
+                        "district_id": {
+                            "type": "integer"
+                        }
+                    },
+                    "required": [
+                        "district_name",
+                        "district_id"
+                    ]
+                },
+                {
+                    "$ref": "#/definitions/DailyCountsUpdates"
+                }
+
+            ]
+        },
+        "DistrictTotalCountsUpdateOnADayWithDate": {
+            "allOf": [{
+                    "$ref": "#/definitions/DayTotalCountsUpdates"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "date": {
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "date"
+                    ]
+                }
+            ]
+        },
+        "MandalTotalCountsUpdateOnADay": {
+            "allOf": [{
+                    "type": "object",
+                    "properties": {
+                        "mandal_name": {
+                            "type": "string"
+                        },
+                        "mandal_id": {
+                            "type": "integer"
+                        }
+                    },
+                    "required": [
+                        "mandal_name",
+                        "mandal_id"
+                    ]
+                },
+                {
+                    "$ref": "#/definitions/DayTotalCountsUpdates"
+                }
+            ]
+        },
+        "MandalDailyCountsUpdateOnADay": {
+            "allOf": [{
+                    "type": "object",
+                    "properties": {
+                        "mandal_name": {
+                            "type": "string"
+                        },
+                        "mandal_id": {
+                            "type": "integer"
+                        }
+                    },
+                    "required": [
+                        "mandal_name",
+                        "mandal_id"
+                    ]
+                },
+                {
+                    "$ref": "#/definitions/DailyCountsUpdates"
+                }
+            ]
+        },
+        "MandalTotalCountsUpdateOnADayWithDate": {
+            "allOf": [{
+                    "$ref": "#/definitions/MandalTotalCountsUpdateOnADay"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "date": {
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "date"
+                    ]
+                }
+            ]
+        },
+        "StateDailyCountsUpdates": {
+            "type": "object",
+            "properties": {
+                "state_name": {
+                    "type": "string"
+                },
+                "day_wise_statistics": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/StateTotalCountsUpdateOnADayWithDate"
+                    }
+                }
+            },
+            "required": [
+                "day_wise_statistics",
+                "state_name"
+            ]
+        },
+        "StateDailyCounts": {
+            "type": "object",
+            "properties": {
+                "state_name": {
+                    "type": "string"
+                },
+                "day_wise_statistics": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/DailyCountsWithDate"
+                    }
+                }
+            },
+            "required": [
+                "day_wise_statistics",
+                "state_name"
+            ]
+        },
+        "DistrictDailyCountsUpdates": {
+            "type": "object",
+            "properties": {
+                "district_name": {
+                    "type": "string"
+                },
+                "district_id": {
+                    "type": "integer"
+                },
+                "day_wise_statistics": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/DistrictTotalCountsUpdateOnADayWithDate"
+                    }
+                }
+            },
+            "required": [
+                "day_wise_statistics",
+                "district_name",
+                "district_id"
+            ]
+        },
+        "DistrictDailyCounts": {
+            "type": "object",
+            "properties": {
+                "district_name": {
+                    "type": "string"
+                },
+                "district_id": {
+                    "type": "integer"
+                },
+                "day_wise_statistics": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/DailyCountsWithDate"
+                    }
+                }
+            },
+            "required": [
+                "day_wise_statistics",
+                "district_name",
+                "district_id"
+            ]
+        },
+        "MandalDailyCounts": {
+            "type": "object",
+            "properties": {
+                "mandal_name": {
+                    "type": "string"
+                },
+                "mandal_id": {
+                    "type": "integer"
+                },
+                "day_wise_statistics": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/DailyCountsWithDate"
+                    }
+                }
+            },
+            "required": [
+                "day_wise_statistics",
+                "mandal_name",
+                "mandal_id"
+            ]
+        },
+        "MandalDailyCountsUpdates": {
+            "type": "object",
+            "properties": {
+                "mandal_name": {
+                    "type": "string"
+                },
+                "mandal_id": {
+                    "type": "integer"
+                },
+                "day_wise_statistics": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/MandalTotalCountsUpdateOnADayWithDate"
+                    }
+                }
+            },
+            "required": [
+                "day_wise_statistics",
+                "mandal_name",
+                "mandal_id"
+            ]
+        },
+        "StateCumulativeStatsticsDay": {
+            "allOf": [{
+                    "$ref": "#/definitions/StateTotalCountsUpdateOnADay"
+                },
+                {
+                    "$ref": "#/definitions/DistrictWiseDayCountsUpdates"
+                }
+            ]
+        },
+        "StateDailyStatsticsDay": {
+            "allOf": [{
+                    "$ref": "#/definitions/StateDailyCountsUpdateOnADay"
+                },
+                {
+                    "$ref": "#/definitions/DistrictWiseDailyCountsUpdates"
+                }
+            ]
+        },
+        "DistrictCumulativeStatsticsDay": {
+            "allOf": [{
+                    "$ref": "#/definitions/DistrictTotalCountsUpdateOnADay"
+                },
+                {
+                    "$ref": "#/definitions/MandalWiseDayCountsUpdates"
+                }
+            ]
+        },
+        "DistrictDailyStatstics": {
+            "allOf": [{
+                    "$ref": "#/definitions/DistrictDailyCountsUpdateOnADay"
+                },
+                {
+                    "$ref": "#/definitions/MandalWiseDailyCountsUpdates"
+                }
+            ]
+        },
+        "DistrictWiseDayCountsUpdates": {
+            "type": "object",
+            "properties": {
+                "districts": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/DistrictTotalCountsUpdateOnADay"
+                    }
+                }
+            },
+            "required": [
+                "districts"
+            ]
+        },
+        "MandalWiseDayCountsUpdates": {
+            "type": "object",
+            "properties": {
+                "mandals": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/MandalTotalCountsUpdateOnADay"
+                    }
+                }
+            },
+            "required": [
+                "mandals"
+            ]
+        },
+        "MandalWiseDailyCountsUpdates": {
+            "type": "object",
+            "properties": {
+                "mandals": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/MandalDailyCountsUpdateOnADay"
+                    }
+                }
+            },
+            "required": [
+                "mandals"
+            ]
+        },
+        "DistrictWiseDailyCountsUpdates": {
+            "type": "object",
+            "properties": {
+                "districts": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/DistrictDailyCountsUpdateOnADay"
+                    }
+                }
+            },
+            "required": [
+                "districts"
+            ]
+        },
+        "DistrictCumulativeStatsticsDayWise": {
+            "allOf": [{
+                "$ref": "#/definitions/DistrictDailyCountsUpdates"
+            }]
+        },
+        "MandalCumulativeStatsticsDayWise": {
+            "allOf": [{
+                "$ref": "#/definitions/MandalDailyCountsUpdates"
+            }]
+        },
+        "DistrictsCumulativeStatsticsDayWise": {
+            "type": "array",
+            "items": {
+                "$ref": "#/definitions/DistrictCumulativeStatsticsDayWise"
+            }
+        },
+        "MandalsDailyStatsticsDayWise": {
+            "type": "array",
+            "items": {
+                "$ref": "#/definitions/MandalDailyCounts"
+            }
+        },
+        "MandalsCumulativeStatsticsDayWise": {
+            "type": "array",
+            "items": {
+                "$ref": "#/definitions/MandalCumulativeStatsticsDayWise"
+            }
+        },
+        "StateCumulativeStatsticsDayWise": {
+            "allOf": [{
+                "$ref": "#/definitions/StateDailyCountsUpdates"
+            }]
+        }
+    },
+    "parameters": {
+        "SignUpUser": {
+            "name": "user_details",
+            "in": "body",
+            "required": true,
+            "description": "The details has needed to sign up.",
+            "schema": {
+                "$ref": "#/definitions/UserDetails"
+            }
+        },
+        "SignInUser": {
+            "name": "user_details",
+            "in": "body",
+            "required": true,
+            "description": "The details has needed to sign up.",
+            "schema": {
+                "$ref": "#/definitions/SignInDetails"
+            }
+        },
+        "PostCasesParameters": {
+            "name": "user_details",
+            "in": "body",
+            "required": true,
+            "description": "enter the data of a day to insert into state details.",
+            "schema": {
+                "type": "object",
+                "properties": {
+                    "confirmed_cases": {
+                        "type": "integer"
+                    },
+                    "deaths": {
+                        "type": "integer"
+                    },
+                    "recovered_cases": {
+                        "type": "integer"
+                    }
+                },
+                "required": [
+                    "confirmed_cases",
+                    "deaths",
+                    "recovered_cases"
+                ]
+            }
+        },
+        "StateIdPathParameter": {
+            "name": "state_id",
+            "in": "path",
+            "required": true,
+            "description": "The selected state id",
+            "type": "integer"
+        },
+        "MandalIdPathParameter": {
+            "name": "mandal_id",
+            "in": "path",
+            "required": true,
+            "description": "The selected mandal id",
+            "type": "integer"
+        },
+        "DistrictIdPathParameter": {
+            "name": "district_id",
+            "in": "path",
+            "required": true,
+            "description": "The selected district Id",
+            "type": "integer"
+        },
+        "DateParameter": {
+            "name": "date",
+            "in": "query",
+            "required": true,
+            "description": "The selected date",
+            "type": "string",
+            "format": "date"
+        }
+    },
+    "responses": {},
+    "paths": {
+        "/sign_up/v1/": {
+            "post": {
+                "security": [{
+                    "oauth": [
+                        "write",
+                        "read"
+                    ]
+                }],
+                "operationId": "sign_up_user",
+                "parameters": [{
+                    "$ref": "#/parameters/SignUpUser"
+                }],
+                "responses": {
+                    "201": {
+                        "description": "Registered Successfully!!",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "user_name": {
+                                    "type": "string"
+                                },
+                                "password": {
+                                    "type": "string"
+                                }
+                            },
+                            "required": [
+                                "user_name",
+                                "password"
+                            ]
+                        }
+                    },
+                    "409": {
+                        "description": "User name already exists"
+                    },
+                    "400": {
+                        "description": "Enter valid details"
+                    }
+                }
+            }
+        },
+        "/sign_in/v1/": {
+            "post": {
+                "security": [],
+                "operationId": "sign_in_user",
+                "parameters": [{
+                    "$ref": "#/parameters/SignInUser"
+                }],
+                "responses": {
+                    "200": {
+                        "description": "Successful",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "user_id": {
+                                    "type": "integer"
+                                },
+                                "access_token": {
+                                    "type": "string"
+                                },
+                                "refresh_token": {
+                                    "type": "string"
+                                },
+                                "expires_in": {
+                                    "type": "string"
+                                }
+                            },
+                            "required": [
+                                "access_token"
+                            ]
+                        }
+                    },
+                    "409": {
+                        "description": "User name already exists"
+                    },
+                    "401": {
+                        "description": "Incorrect password"
+                    },
+                    "400": {
+                        "description": "Invalid username and password"
+                    }
+                }
+            }
+        },
+        "/state/cumulative/report/v1/": {
+            "get": {
+                "security": [{
+                    "oauth": [
+                        "read",
+                        "write"
+                    ]
+                }],
+                "operationId": "get_state_cumulative_report",
+                "parameters": [{
+                    "$ref": "#/parameters/DateParameter"
+                }],
+                "responses": {
+                    "200": {
+                        "description": "Successful",
+                        "schema": {
+                            "$ref": "#/definitions/StateCumulativeStatsticsDay"
+                        }
+                    }
+                }
+            }
+        },
+        "/state/daily/report/v1/": {
+            "get": {
+                "security": [{
+                    "oauth": [
+                        "read",
+                        "write"
+                    ]
+                }],
+                "operationId": "get_state_daily_report",
+                "parameters": [{
+                    "$ref": "#/parameters/DateParameter"
+                }],
+                "responses": {
+                    "200": {
+                        "description": "Successful",
+                        "schema": {
+                            "$ref": "#/definitions/StateDailyStatsticsDay"
+                        }
+                    }
+                }
+            }
+        },
+        "/state/cumulative/day_wise/report/v1/": {
+            "get": {
+                "security": [{
+                    "oauth": [
+                        "read",
+                        "write"
+                    ]
+                }],
+                "operationId": "get_state_cumulative_report_day_wise",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Successful",
+                        "schema": {
+                            "$ref": "#/definitions/StateCumulativeStatsticsDayWise"
+                        }
+                    }
+                }
+            }
+        },
+        "/state/daily/day_wise/report/v1/": {
+            "get": {
+                "security": [{
+                    "oauth": [
+                        "read",
+                        "write"
+                    ]
+                }],
+                "operationId": "get_state_daily_report_day_wise",
+                "parameters": [{
+                    "$ref": "#/parameters/DateParameter"
+                }],
+                "responses": {
+                    "200": {
+                        "description": "Successful",
+                        "schema": {
+                            "$ref": "#/definitions/StateDailyCounts"
+                        }
+                    }
+                }
+            }
+        },
+        "/state/districts/cumulative/day_wise/report/v1/": {
+            "get": {
+                "security": [{
+                    "oauth": [
+                        "read",
+                        "write"
+                    ]
+                }],
+                "operationId": "get_districts_cumulative_report_day_wise",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Successful",
+                        "schema": {
+                            "$ref": "#/definitions/DistrictsCumulativeStatsticsDayWise"
+                        }
+                    }
+                }
+            }
+        },
+        "/{mandal_id}/post_cases/v1/": {
+            "post": {
+                "security": [{
+                    "oauth": [
+                        "read",
+                        "write"
+                    ]
+                }],
+                "operationId": "post_cases_deatils",
+                "parameters": [{
+                        "$ref": "#/parameters/MandalIdPathParameter"
+                    },
+                    {
+                        "$ref": "#/parameters/DateParameter"
+                    },
+                    {
+                        "$ref": "#/parameters/PostCasesParameters"
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Successful",
+                        "schema": {
+                            "$ref": "#/definitions/StatsResponseForUpdateAndPost"
+                        }
+                    }
+                }
+            }
+        },
+        "/{mandal_id}/update_cases/v1/": {
+            "post": {
+                "security": [{
+                    "oauth": [
+                        "read",
+                        "write"
+                    ]
+                }],
+                "operationId": "update_cases_deatils",
+                "parameters": [{
+                        "$ref": "#/parameters/MandalIdPathParameter"
+                    },
+                    {
+                        "$ref": "#/parameters/DateParameter"
+                    },
+                    {
+                        "$ref": "#/parameters/PostCasesParameters"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful",
+                        "schema": {
+                            "$ref": "#/definitions/StatsResponseForUpdateAndPost"
+                        }
+                    }
+                }
+            }
+        },
+        "/district/{district_id}/cumulative/report/v1/": {
+            "get": {
+                "security": [{
+                    "oauth": [
+                        "read",
+                        "write"
+                    ]
+                }],
+                "operationId": "get_district_cumulative_report",
+                "parameters": [{
+                        "$ref": "#/parameters/DistrictIdPathParameter"
+                    },
+                    {
+                        "$ref": "#/parameters/DateParameter"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful",
+                        "schema": {
+                            "$ref": "#/definitions/DistrictCumulativeStatsticsDay"
+                        }
+                    }
+                }
+            }
+        },
+        "/district/{district_id}/cumulative/day_wise/report/v1/": {
+            "get": {
+                "security": [{
+                    "oauth": [
+                        "read",
+                        "write"
+                    ]
+                }],
+                "operationId": "get_district_cumulative_report_day_wise",
+                "parameters": [{
+                    "$ref": "#/parameters/DistrictIdPathParameter"
+                }],
+                "responses": {
+                    "200": {
+                        "description": "Successful",
+                        "schema": {
+                            "$ref": "#/definitions/DistrictCumulativeStatsticsDayWise"
+                        }
+                    }
+                }
+            }
+        },
+        "/district/{district_id}/mandals/cumulative/day_wise/report/v1/": {
+            "get": {
+                "security": [{
+                    "oauth": [
+                        "read",
+                        "write"
+                    ]
+                }],
+                "operationId": "get_mandals_cumulative_report_day_wise",
+                "parameters": [{
+                    "$ref": "#/parameters/DistrictIdPathParameter"
+                }],
+                "responses": {
+                    "200": {
+                        "description": "Successful",
+                        "schema": {
+                            "$ref": "#/definitions/MandalsCumulativeStatsticsDayWise"
+                        }
+                    }
+                }
+            }
+        },
+        "/district/{district_id}/mandals/daily/day_wise/report/v1/": {
+            "get": {
+                "security": [{
+                    "oauth": [
+                        "read",
+                        "write"
+                    ]
+                }],
+                "operationId": "get_mandals_daily_report_day_wise",
+                "parameters": [{
+                    "$ref": "#/parameters/DistrictIdPathParameter"
+                }],
+                "responses": {
+                    "200": {
+                        "description": "Successful",
+                        "schema": {
+                            "$ref": "#/definitions/MandalsDailyStatsticsDayWise"
+                        }
+                    }
+                }
+            }
+        },
+        "/district/{district_id}/daily/report/v1/": {
+            "get": {
+                "security": [{
+                    "oauth": [
+                        "read",
+                        "write"
+                    ]
+                }],
+                "operationId": "get_district_daily_report",
+                "parameters": [{
+                        "$ref": "#/parameters/DistrictIdPathParameter"
+                    },
+                    {
+                        "$ref": "#/parameters/DateParameter"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful",
+                        "schema": {
+                            "$ref": "#/definitions/DistrictDailyStatstics"
+                        }
+                    }
+                }
+            }
+        },
+        "/district/{district_id}/daily/day_wise/report/v1/": {
+            "get": {
+                "security": [{
+                    "oauth": [
+                        "read",
+                        "write"
+                    ]
+                }],
+                "operationId": "get_district_daily_day_wise_report",
+                "parameters": [{
+                        "$ref": "#/parameters/DistrictIdPathParameter"
+                    },
+                    {
+                        "$ref": "#/parameters/DateParameter"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful",
+                        "schema": {
+                            "$ref": "#/definitions/DistrictDailyCounts"
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+}
