@@ -364,3 +364,63 @@ class StorageImplementation(StorageInterface):
                     day_wise_statistics=day_wise_statistics
         )
         return day_wise_district_total_cases_dto
+
+    def get_districts_zones_dto(self) -> DistrictZones:
+        state_dto = District.objects.filter(state_id=1). \
+            values('state_id','state__state_name').annotate(
+                total_confirmed_cases=Sum(
+                    'mandals__casesdetails__confirmed_cases'
+                ),
+                total_recovered_cases=Sum(
+                    'mandals__casesdetails__recovered_cases'
+                ),
+                total_deaths=Sum(
+                    'mandals__casesdetails__deaths'
+                )
+            )
+        districts_query_set = District.objects.filter(state_id=1). \
+            values('id','district_name').annotate(
+                total_confirmed_cases=Sum(
+                    'mandals__casesdetails__confirmed_cases'
+                ),
+                total_recovered_cases=Sum(
+                    'mandals__casesdetails__recovered_cases'
+                ),
+                total_deaths=Sum(
+                    'mandals__casesdetails__deaths'
+                )
+            )
+        state_total_active_cases = state_dto[0]["total_confirmed_cases"] - (
+            state_dto[0]["total_recovered_cases"] + state_dto[0]["total_deaths"]
+            )
+        zone_dtos = []
+        for district in districts_query_set:
+            active_cases = district["total_confirmed_cases"] - (
+            district["total_recovered_cases"] + district["total_deaths"]
+            )
+            percent = (100*(active_cases))/state_total_active_cases
+            red_zone = percent >= 60
+            orange_zone = percent >= 30 and percent < 60
+            green_zone = percent < 30
+            if red_zone:
+                zone = "red_zone"
+            if orange_zone:
+                zone = "orange_zone"
+            if green_zone:
+                zone = "green_zone"
+            district_zone_dto = Zone(
+                district_id=district["id"],
+                district_name=district["district_name"],
+                zone=zone
+            )
+            zone_dtos.append(district_zone_dto)
+
+        zones_dto = DistrictZones(
+            zones = zone_dtos
+        )
+        return zones_dto
+
+
+
+
+

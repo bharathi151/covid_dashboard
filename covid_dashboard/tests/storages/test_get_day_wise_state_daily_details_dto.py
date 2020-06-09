@@ -92,3 +92,18 @@ def test_get_day_wise_state_daily_details_dto_when_cases_registered_for_two_mand
     state_total_cases_dto = sql_storage.get_day_wise_state_daily_dto(till_date=till_date)
 
     assert expected_output == state_total_cases_dto
+
+@pytest.mark.django_db
+def test_get_day_wise_state_daily_details_dto_when_no_cases_registered_till_the_date_returns_district_empty_list_for_day_wise_statistics(kadapa_cases):
+
+    till_date = datetime.date(2020,5,19)
+
+    expected_output = DayWiseStateTotalCasesDtos(
+               state_name="AndhraPradesh",
+               day_wise_statistics=[]
+        )
+    sql_storage = StorageImplementation()
+
+    state_total_cases_dto = sql_storage.get_day_wise_state_daily_dto(till_date=till_date)
+
+    assert expected_output == state_total_cases_dto

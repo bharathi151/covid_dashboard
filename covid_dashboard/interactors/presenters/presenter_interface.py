@@ -100,3 +100,16 @@ class PresenterInterface(ABC):
     def get_day_wise_state_daily_details_dto_response(
         self, state_daily_dto: DayWiseStateTotalCasesDtos):
         pass
+    @abstractmethod
+    def get_day_wise_mandals_daily_details_dto_response(
+            self, mandals_daily_dto: DayWiseMandalTotalCasesDtos):
+        pass
+
+    @abstractmethod
+    def get_mandal_stats_dto_response(self, stats_dto):
+        pass
+
+    @abstractmethod
+    def get_districts_zones_dto_response(
+            self, zones_dto: DistrictZones):
+        pass

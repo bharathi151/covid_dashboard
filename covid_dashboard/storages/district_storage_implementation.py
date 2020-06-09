@@ -229,6 +229,10 @@ class StorageImplementation(StorageInterface):
                  total_recovered_cases=Sum('casesdetails__recovered_cases'),
                  total_deaths=Sum('casesdetails__deaths')
              )
+        mandals_total_cases_dto = self._get_mandals_day_wise_stats_dto(mandal_objs)
+        return mandals_total_cases_dto
+
+    def _get_mandals_day_wise_stats_dto(self, mandal_objs):
         mandals_ids = []
         mandals_dates = []
         for mandal in mandal_objs:
@@ -350,11 +354,21 @@ class StorageImplementation(StorageInterface):
                     day_wise_statistics=[]
             )
             return day_wise_district_total_cases_dto
+        day_wise_statistics = self._get_day_wise_stats(
+            dates, district_details_objs, till_date
+        )
+        day_wise_district_total_cases_dto = DayWiseDistrictTotalCasesDto(
+                    district_name=district_details_objs[0]["district__district_name"],
+                    district_id=district_details_objs[0]["district_id"],
+                    day_wise_statistics=day_wise_statistics
+        )
+        return day_wise_district_total_cases_dto
+
+    def _get_day_wise_stats(self, dates, district_details_objs, till_date):
         start_date = min(dates)
         district_obj_date_wise_stats = {}
         district_obj_dates=[]
         delta = datetime.timedelta(days=1)
-
         for obj in district_details_objs:
             date = obj["casesdetails__date"]
             district_obj_dates.append(date)
@@ -378,9 +392,18 @@ class StorageImplementation(StorageInterface):
                     )
             )
             start_date += delta
-        day_wise_district_total_cases_dto = DayWiseDistrictTotalCasesDto(
-                    district_name=district_details_objs[0]["district__district_name"],
-                    district_id=district_details_objs[0]["district_id"],
-                    day_wise_statistics=day_wise_statistics
-        )
-        return day_wise_district_total_cases_dto
+        return day_wise_statistics
+
+    def get_day_wise_mandals_daily_dto(self, district_id: int,
+                                       till_date: str):
+        mandal_objs = Mandal.objects.filter(
+            district_id=district_id,casesdetails__date__lte=till_date
+            ). \
+             values('id', 'mandal_name', 'casesdetails__date'). \
+             annotate(
+                 total_confirmed_cases=F('casesdetails__confirmed_cases'),
+                 total_recovered_cases=F('casesdetails__recovered_cases'),
+                 total_deaths=F('casesdetails__deaths')
+             )
+        mandals_total_cases_dto = self._get_mandals_day_wise_stats_dto(mandal_objs)
+        return mandals_total_cases_dto

@@ -1,5 +1,5 @@
 from functools import reduce
-def sign_up_user(*args, **kwargs):  # pylint: disable=invalid-name
+def get_districts_zones(*args, **kwargs):  # pylint: disable=invalid-name
     """
     Note: replace below mock implementation with your actual implementation
 

@@ -38,7 +38,7 @@ def test_get_day_wise_district_daily_details_dto_returns_district_total_cases_dt
     assert expected_output == district_total_cases_dto
 
 @pytest.mark.django_db
-def test_get_day_wise_district_daily_details_dto_when_there_is_no_case_for_dates_returns_district_total_cases_dto_with_previous_data_for_those_dates(post_cases):
+def test_get_day_wise_district_daily_details_dto_when_there_is_no_case_for_dates_returns_district_total_cases_dto_with_previous_data_for_those_dates(kadapa_mandals_post_cases):
 
     till_date = datetime.date(2020,5,22)
     district_id = 1
@@ -94,6 +94,23 @@ def test_get_day_wise_district_daily_details_dto_when_cases_registered_for_two_m
                district_name="Kadapa",
                district_id=1,
                day_wise_statistics=day_wise_statistics
+        )
+    sql_storage = StorageImplementation()
+
+    district_total_cases_dto = sql_storage.get_day_wise_district_daily_dto(till_date=till_date, district_id=district_id)
+
+    assert expected_output == district_total_cases_dto
+
+@pytest.mark.django_db
+def test_get_day_wise_district_daily_details_dto_when_no_cases_registered_till_the_date_returns_district_empty_list_for_day_wise_statistics(kadapa_cases):
+
+    till_date = datetime.date(2020,5,19)
+    district_id = 1
+
+    expected_output = DayWiseDistrictTotalCasesDto(
+               district_name="Kadapa",
+               district_id=1,
+               day_wise_statistics=[]
         )
     sql_storage = StorageImplementation()
 

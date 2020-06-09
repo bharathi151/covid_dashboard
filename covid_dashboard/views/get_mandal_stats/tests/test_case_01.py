@@ -6,11 +6,7 @@ from django_swagger_utils.utils.test import CustomAPITestCase
 from . import APP_NAME, OPERATION_NAME, REQUEST_METHOD, URL_SUFFIX
 
 REQUEST_BODY = """
-{
-    "user_name": "string",
-    "password": "string",
-    "confirm_password": "string"
-}
+
 """
 
 TEST_CASE = {
@@ -18,13 +14,13 @@ TEST_CASE = {
         "path_params": {},
         "query_params": {},
         "header_params": {},
-        "securities": {"oauth": {"tokenUrl": "http://auth.ibtspl.com/oauth2/", "flow": "password", "scopes": ["write", "read"], "type": "oauth2"}},
+        "securities": {"oauth": {"tokenUrl": "http://auth.ibtspl.com/oauth2/", "flow": "password", "scopes": ["superuser"], "type": "oauth2"}},
         "body": REQUEST_BODY,
     },
 }
 
 
-class TestCase01SignUpUserAPITestCase(CustomAPITestCase):
+class TestCase01GetMandalStatsAPITestCase(CustomAPITestCase):
     app_name = APP_NAME
     operation_name = OPERATION_NAME
     request_method = REQUEST_METHOD

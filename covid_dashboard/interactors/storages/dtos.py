@@ -12,6 +12,16 @@ class DayWiseStateCumulativeDto:
     total_active_cases: int
 
 @dataclass()
+class Zone:
+    district_id: int
+    district_name: str
+    zone: str
+
+@dataclass
+class DistrictZones:
+    zones: List[Zone]
+
+@dataclass()
 class DayWiseCumulativeDto:
     date: str
     total_recovered_cases: int
@@ -27,6 +37,20 @@ class CasesDetailsDto:
     total_recovered_cases: int
     total_deaths: int
 
+
+@dataclass()
+class DayStats:
+    date: date
+    district_name: str
+    mandal_name: str
+    total_confirmed_cases: int
+    total_recovered_cases: int
+    total_deaths: int
+    total_active_cases: int
+
+@dataclass()
+class StatsDtos:
+    stats: List[DayStats]
 
 @dataclass()
 class DayWiseTotalCasesDto:

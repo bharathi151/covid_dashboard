@@ -13,7 +13,7 @@ class PresenterImplementation(PresenterInterface):
 
 
     def raise_invalid_password_exception(self):
-        raise Unauthorized(*INVALID_PASSWORD)
+        raise BadRequest(*INVALID_PASSWORD)
 
     def raise_invalid_username_exception(self):
         raise NotFound(*INVALID_USER_NAME)
@@ -187,9 +187,44 @@ class PresenterImplementation(PresenterInterface):
 
     def get_day_wise_state_daily_details_dto_response(
         self, state_daily_dto: DayWiseStateTotalCasesDtos):
-        day_wise_statistics = [ stats.__dict__ for stats in state_daily_dto.day_wise_statistics]
+        day_wise_statistics = [ stats.__dict__ 
+        for stats in state_daily_dto.day_wise_statistics
+        ]
         day_wise_state_daily_dict = {
             "state_name": state_daily_dto.state_name,
             "day_wise_statistics": day_wise_statistics
         }
         return day_wise_state_daily_dict
+
+    def get_day_wise_mandals_daily_details_dto_response(
+            self, mandals_daily_dto: DayWiseMandalTotalCasesDtos):
+        mandals_list = []
+        for mandal_dto in mandals_daily_dto.mandals:
+            day_wise_statistics_details = []
+            for day_wise_mandal_dto in mandal_dto.day_wise_statistics:
+                day_wise_mandal_details = {
+                    "date": day_wise_mandal_dto.date,
+                    "total_confirmed_cases": day_wise_mandal_dto.total_confirmed_cases,
+                    "total_recovered_cases" : day_wise_mandal_dto.total_recovered_cases,
+                    "total_deaths": day_wise_mandal_dto.total_deaths
+                }
+                day_wise_statistics_details.append(day_wise_mandal_details)
+            mandals_list.append({
+                "mandal_name": mandal_dto.mandal_name,
+                "mandal_id": mandal_dto.mandal_id,
+                "day_wise_statistics": day_wise_statistics_details
+            })
+        return mandals_list
+
+    def get_mandal_stats_dto_response(self, stats_dto):
+        stats = [ day_stats.__dict__ 
+            for day_stats in stats_dto.stats
+        ]
+        return stats
+
+    def get_districts_zones_dto_response(
+            self, zones_dto: DistrictZones):
+        zones = [ district_zone.__dict__ 
+            for district_zone in zones_dto.zones
+        ]
+        return zones

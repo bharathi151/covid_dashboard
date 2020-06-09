@@ -27,3 +27,7 @@ class StorageInterface(ABC):
     @abstractmethod
     def get_day_wise_district_daily_dto(self, district_id: int, till_date: str) -> DayWiseDistrictTotalCasesDto:
         pass
+
+    @abstractmethod
+    def get_day_wise_mandals_daily_dto(self, district_id: int, till_date:str) -> DayWiseMandalTotalCasesDtos:
+        pass

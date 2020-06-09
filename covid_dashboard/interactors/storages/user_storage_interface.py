@@ -47,3 +47,7 @@ class StorageInterface(ABC):
     @abstractmethod
     def is_mandal_data_for_date_already_existed(self, date: str, mandal_id: int) -> bool:
         pass
+
+    @abstractmethod
+    def get_mandal_stats_dto(self):
+        pass
