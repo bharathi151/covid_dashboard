@@ -44,11 +44,11 @@ create_districts,create_state):
     storage.is_mandal_data_for_date_already_existed.return_value = False
     presenter.post_cases_details_response.return_value = mock_presenter_response
     interactor = PostCasesDetailsInteractor(
-        storage = storage,
-        presenter = presenter
+        storage = storage
     )
     #act
-    response = interactor.post_cases_details(
+    response = interactor.post_cases_wrapper(
+        presenter=presenter,
         mandal_id=mandal_id,
         date=date,
         confirmed_cases=confirmed_cases,
@@ -83,12 +83,12 @@ def test_post_cases_given_invalid_mandal_id_raise_invalid_mandal_id_exception(
     storage.is_valid_mandal_id.return_value = False
     presenter.raise_invalid_mandal_id_exception.side_effect = NotFound
     interactor = PostCasesDetailsInteractor(
-        storage = storage,
-        presenter = presenter
+        storage = storage
     )
     #act
     with pytest.raises(NotFound):
-         interactor.post_cases_details(
+         interactor.post_cases_wrapper(
+            presenter=presenter,
             mandal_id=mandal_id,
             date=date,
             confirmed_cases=confirmed_cases,
@@ -116,12 +116,12 @@ def test_post_cases_given_existed_mandal_id_and_date_raise_data_already_existed_
     storage.is_mandal_data_for_date_already_existed.return_value = True
     presenter.raise_date_already_existed.side_effect = BadRequest
     interactor = PostCasesDetailsInteractor(
-        storage = storage,
-        presenter = presenter
+        storage = storage
     )
     #act
     with pytest.raises(BadRequest):
-         interactor.post_cases_details(
+         interactor.post_cases_wrapper(
+            presenter=presenter,
             mandal_id=mandal_id,
             date=date,
             confirmed_cases=confirmed_cases,
