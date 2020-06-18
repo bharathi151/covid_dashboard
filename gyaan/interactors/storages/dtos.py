@@ -26,15 +26,6 @@ class RequestDto:
     request_id: int
     user_id: int
 
-@dataclass()
-class DomainDetailsDto:
-    domain: DomainDto
-    domain_stats: DomainStatsDto
-    domain_experts: List[UserDto]
-    user_id: int
-    is_user_domain_expert: bool
-    join_requests: List[RequestDto]
-    requested_users: List[UserDto]
 
 @dataclass()
 class PostDto:
@@ -90,16 +81,3 @@ class PostCommentsCountDto:
 class CommentRepliesCountDto:
     comment_id: int
     replies_count: int
-
-
-@dataclass()
-class CompletePostDetailsDto:
-    post_dtos: List[PostDto]
-    post_reaction_counts: List[PostReactionsCountDto]
-    comment_reaction_counts: List[CommentReactionsCountDto]
-    comment_counts: List[PostCommentsCountDto]
-    reply_counts: List[CommentRepliesCountDto]
-    comment_dtos: List[CommentDto]
-    post_tag_ids: List[PostTagDto]
-    tags: List[TagDto]
-    users_dtos: List[UserDto]

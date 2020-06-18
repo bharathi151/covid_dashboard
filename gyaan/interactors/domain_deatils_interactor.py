@@ -1,7 +1,7 @@
 from typing import List
 from gyaan.interactors.storages.storage_interface import StorageInterface
 from gyaan.interactors.presenters.presenter_interface import PresenterInterface
-from gyaan.interactors.storages.dtos import *
+from gyaan.interactors.presenters.dtos import *
 from gyaan.constants.exceptions import *
 
 class GetDomainDetailsInteractor:

@@ -2,6 +2,7 @@ from abc import ABC
 from abc import abstractmethod
 from typing import List
 from gyaan.interactors.storages.dtos import *
+from gyaan.interactors.presenters.dtos import *
 
 class StorageInterface(ABC):
     @abstractmethod

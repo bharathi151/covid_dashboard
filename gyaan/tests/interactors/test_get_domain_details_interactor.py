@@ -2,6 +2,7 @@ from unittest.mock import create_autospec
 import pytest
 import datetime
 from gyaan.interactors.storages.dtos import *
+from gyaan.interactors.presenters.dtos import *
 from gyaan.interactors.domain_deatils_interactor import GetDomainDetailsInteractor
 from gyaan.interactors.presenters.presenter_interface import PresenterInterface
 from gyaan.interactors.storages.storage_interface import StorageInterface

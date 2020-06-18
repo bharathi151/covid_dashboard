@@ -3,6 +3,7 @@ import datetime
 import pytest
 
 from gyaan.interactors.storages.dtos import *
+from gyaan.interactors.presenters.dtos import *
 from gyaan.interactors.get_posts_interactor import GetPostsInteractor
 from gyaan.interactors.presenters.presenter_interface import PresenterInterface
 from gyaan.interactors.storages.storage_interface import StorageInterface
