@@ -23,7 +23,7 @@ def test_update_cases_given_valid_details_updates_cases(cases_for_update):
         recovered_cases=recovered_cases)
 
 
-    assert stats_dto.date == date
+    assert stats_dto.date == date.strftime("%d/%m/%Y")
     assert stats_dto.total_recovered_cases == recovered_cases
     assert stats_dto.total_confirmed_cases == confirmed_cases
     assert stats_dto.total_deaths == deaths

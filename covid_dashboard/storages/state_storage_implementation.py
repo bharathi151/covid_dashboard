@@ -46,13 +46,16 @@ class StorageImplementation(StorageInterface):
 
     def _get_state_total_cases_dto(self, state_dto, districts_query_set):
         district_objs = District.objects.all()
-        districts_dtos_ids=[obj["id"] for obj in districts_query_set]
+        district_objs_dict = {}
+        for obj in districts_query_set:
+            district_objs_dict[obj["id"]] = obj
+        districts_dtos_ids=[obj["id"]for obj in districts_query_set]
         district_total_cases_dtos=[]
         for obj in district_objs:
             if obj.id in districts_dtos_ids:
                 district_total_cases_dtos.append(
                     self._update_cases_count_with_obj_count(
-                        obj.id, districts_query_set
+                        obj.id, district_objs_dict
                     )
                 )
             else:
@@ -69,8 +72,8 @@ class StorageImplementation(StorageInterface):
         )
         return state_total_cases_dto
 
-    def _update_cases_count_with_obj_count(self, id, districts_query_set):
-        district=districts_query_set.get(id=id)
+    def _update_cases_count_with_obj_count(self, id, district_objs_dict):
+        district=district_objs_dict[id]
         district_dto = DistrictTotalCasesDto(
             district_name=district["district_name"],
             district_id=district["id"],
@@ -201,15 +204,14 @@ class StorageImplementation(StorageInterface):
         districts_dates = []
         districts_objs_dict = defaultdict(lambda: {}) 
         for district in district_objs:
-            if district["mandals__casesdetails__date"]:
-                if district["mandals__casesdetails__date"] not in districts_dates:
-                    districts_dates.append(district["mandals__casesdetails__date"])
-        for district in district_objs:
-            if district["id"] not in districts_ids:
-                districts_ids.append(district["id"])
-                id = district["id"]
-                date = district["mandals__casesdetails__date"]
-                districts_objs_dict[id][date] = district
+            id = district["id"]
+            date = district["mandals__casesdetails__date"]
+            districts_ids.append(id)
+            districts_dates.append(date)
+            districts_objs_dict[id][date] = district
+        districts_dates = list(set(districts_dates))
+        districts_ids = list(set(districts_ids))
+
         districts_dtos = self._get_day_wise_districts_cumulative_stats_dtos(
                 district_objs, districts_ids, districts_dates, districts_objs_dict
             )
@@ -224,7 +226,7 @@ class StorageImplementation(StorageInterface):
         districts = []
         if not districts_dates:
             return districts
-        min_date = min(districts_dates)
+        date = min(districts_dates)
         max_date = max(districts_dates)
         delta = datetime.timedelta(days=1)
 
@@ -233,26 +235,35 @@ class StorageImplementation(StorageInterface):
             total_recovered_cases = 0
             total_deaths = 0
             day_wise_total_cases_dtos = []
-            min_date = min(districts_dates)
-            while min_date<=max_date:
-                for district in district_objs:
-                    if id == district["id"] and min_date == district["mandals__casesdetails__date"] :
-                        total_confirmed_cases += district["total_confirmed_cases"]
-                        total_recovered_cases += district["total_recovered_cases"]
-                        total_deaths += district["total_deaths"]
+            date = min(districts_dates)
+            while date<=max_date:
+                is_obj_present = self._is_obj_present(districts_objs_dict, id, date)
+                if is_obj_present:
+                    district = districts_objs_dict[id][date]
+                    total_confirmed_cases += district["total_confirmed_cases"]
+                    total_recovered_cases += district["total_recovered_cases"]
+                    total_deaths += district["total_deaths"]
                 day_wise_total_cases_dtos.append(
                     self._get_district_day_total_cases_dto(
                         total_confirmed_cases, total_recovered_cases,
-                        total_deaths, min_date
+                        total_deaths, date
                     )
                 )
-                min_date += delta
+                date += delta
             districts.append(
                         self._get_day_wise_district_cumulative_dto(
                             day_wise_total_cases_dtos, id, district_objs
                         )
                     )
         return districts
+
+    def _is_obj_present(self, districts_objs_dict, id, date):
+        try:
+            districts_objs_dict[id][date]
+        except:
+            return False
+        return True
+
     def _get_district_day_total_cases_dto(
         self, total_confirmed_cases, total_recovered_cases, total_deaths, date):
         day_wise_total_cases_dto = DayWiseTotalCasesDto(
