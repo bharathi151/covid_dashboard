@@ -81,4 +81,8 @@ class StorageInterface(ABC):
     def get_comment_details_dtos(self, comment_ids: List[int]) -> List[CommentDto]:
         pass
 
+    @abstractmethod
+    def get_domain_post_ids(self, domain_id: int, offset: int, limit: int) -> List[int]:
+        pass
+
 

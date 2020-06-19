@@ -25,3 +25,20 @@ class PresenterInterface(ABC):
     @abstractmethod
     def get_posts_response(self, complete_posts_dto: CompletePostDetailsDto):
         pass
+
+    @abstractmethod
+    def get_domain_posts_response(self, posts_complete_details_dtos: CompletePostDetailsDto):
+        pass
+
+    @abstractmethod
+    def raise_invalid_limit_exception(self, error):
+        pass
+
+    @abstractmethod
+    def raise_invalid_offset_exception(self, error):
+        pass
+
+    @abstractmethod
+    def get_domain_with_posts_response(
+            self, domain_with_posts_dto: CompletePostDetailsDto):
+        pass

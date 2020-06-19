@@ -24,3 +24,8 @@ class CompletePostDetailsDto:
     post_tag_ids: List[PostTagDto]
     tags: List[TagDto]
     users_dtos: List[UserDto]
+
+@dataclass()
+class DomainDetailsWithPostsDto:
+    domain_details: DomainDetailsDto
+    post_details: CompletePostDetailsDto

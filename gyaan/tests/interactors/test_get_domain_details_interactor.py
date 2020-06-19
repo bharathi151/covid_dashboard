@@ -3,7 +3,7 @@ import pytest
 import datetime
 from gyaan.interactors.storages.dtos import *
 from gyaan.interactors.presenters.dtos import *
-from gyaan.interactors.domain_deatils_interactor import GetDomainDetailsInteractor
+from gyaan.interactors.domain_details_interactor import GetDomainDetailsInteractor
 from gyaan.interactors.presenters.presenter_interface import PresenterInterface
 from gyaan.interactors.storages.storage_interface import StorageInterface
 from django_swagger_utils.drf_server.exceptions import NotFound, BadRequest
@@ -63,45 +63,24 @@ def test_get_domain_details_when_user_not_member_in_domain_given_raise_invalid_d
         )
     presenter.raise_invalid_domain_member_exception.assert_called_once()
 
-def test_get_domain_details_when_valid_details_given_where_user_is_domain_expert_return_domain_dto_with_requests_and_requested_users():
+def test_get_domain_details_when_valid_details_given_where_user_is_domain_expert_return_domain_dto_with_requests_and_requested_users(
+        get_response, domain_dto, experts_dtos
+    ):
     #arrange
     domain_id=1
     user_id=1
 
     storage = create_autospec(StorageInterface)
     presenter = create_autospec(PresenterInterface)
-    expected_output = {
-        "domain_id": 1,
-        "domain_name": "UI/UX",
-        "description": """UX design refers to the term 'user experience design',
-                        while UI stands for “user interface design”.
-                        Both elements are crucial to a product and
-                        work closely together. But despite their professional
-                        relationship, the roles themselves are quite different,
-                        referring to very different aspects of the product
-                        development process and the design discipline."""
-    }
-    domain_dto = DomainDto(
-        name="UI/Ux",
-        domain_id=1,
-        description="""UX design refers to the term 'user experience design',
-                        while UI stands for “user interface design”.
-                        Both elements are crucial to a product and
-                        work closely together. But despite their professional
-                        relationship, the roles themselves are quite different,
-                        referring to very different aspects of the product
-                        development process and the design discipline."""
-    )
+    expected_output = get_response
+    domain_dto = domain_dto
     domain_stats_dto = DomainStatsDto(
         domain_id=1,
         posts_count=1,
         followers_count=3,
         bookmarks_count=3
     )
-    experts_dtos = [
-        UserDto(name="user1", user_id=1, profile_pic="url1"),
-        UserDto(name="user2", user_id=2, profile_pic="url2")
-    ]
+    experts_dtos = experts_dtos
     requests_dtos = [
         RequestDto(request_id=1,user_id=3),
         RequestDto(request_id=2,user_id=4)
@@ -159,45 +138,24 @@ def test_get_domain_details_when_valid_details_given_where_user_is_domain_expert
     presenter.get_domain_details_response.assert_called_once_with(domain_details_dto=domain_details_dto)
 
 
-def test_get_domain_details_when_valid_details_given_where_user_is_not_domain_expert_return_domain_dto_with_empty_requests_and_requested_users():
+def test_get_domain_details_when_valid_details_given_where_user_is_not_domain_expert_return_domain_dto_with_empty_requests_and_requested_users(
+        get_response, domain_dto, experts_dtos
+    ):
     #arrange
     domain_id=1
     user_id=1
 
     storage = create_autospec(StorageInterface)
     presenter = create_autospec(PresenterInterface)
-    expected_output = {
-        "domain_id": 1,
-        "domain_name": "UI/UX",
-        "description": """UX design refers to the term 'user experience design',
-                        while UI stands for “user interface design”.
-                        Both elements are crucial to a product and
-                        work closely together. But despite their professional
-                        relationship, the roles themselves are quite different,
-                        referring to very different aspects of the product
-                        development process and the design discipline."""
-    }
-    domain_dto = DomainDto(
-        name="UI/Ux",
-        domain_id=1,
-        description="""UX design refers to the term 'user experience design',
-                        while UI stands for “user interface design”.
-                        Both elements are crucial to a product and
-                        work closely together. But despite their professional
-                        relationship, the roles themselves are quite different,
-                        referring to very different aspects of the product
-                        development process and the design discipline."""
-    )
+    expected_output = get_response
+    domain_dto = domain_dto
     domain_stats_dto = DomainStatsDto(
         domain_id=1,
         posts_count=1,
         followers_count=3,
         bookmarks_count=3
     )
-    experts_dtos = [
-        UserDto(name="user1", user_id=1, profile_pic="url1"),
-        UserDto(name="user2", user_id=2, profile_pic="url2")
-    ]
+    experts_dtos = experts_dtos
     requests_dtos = []
     requested_user_dtos = []
     is_user_domain_expert = False
