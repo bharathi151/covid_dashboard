@@ -31,22 +31,6 @@ class DomainWithPostsInteractor:
 
     def get_domain_with_posts(self, user_id: int, domain_id: int,
                               offset: int, limit: int):
-        is_invalid_domain_id = not self.storage. \
-                is_valid_domain_id(domain_id=domain_id)
-        if is_invalid_domain_id:
-            raise InvalidDomainId
-
-        is_user_not_domain_member = not self.storage. \
-                is_user_domain_follower(domain_id=domain_id, user_id=user_id)
-        if is_user_not_domain_member:
-            raise UserNotDomainFollower
-        is_invalid_limit = limit <= 0
-        if is_invalid_limit:
-            raise InvalidLimit(invalid_limit=limit)
-
-        is_invalid_offset = offset < 0
-        if is_invalid_offset:
-            raise InvalidOffset(invalid_offset=offset)
         from gyaan.interactors.domain_details_interactor import \
             GetDomainDetailsInteractor
         from gyaan.interactors.domain_posts_interactor import \
