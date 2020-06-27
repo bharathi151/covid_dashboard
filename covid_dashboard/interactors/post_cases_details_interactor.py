@@ -14,7 +14,7 @@ class PostCasesDetailsInteractor:
                            confirmed_cases:int,
                            recovered_cases:int,
                            deaths:int):
-
+        print("ok interactor")
         is_invalid_mandal_id = not self.storage.is_valid_mandal_id(mandal_id=mandal_id)
         if is_invalid_mandal_id:
             self.presenter.raise_invalid_mandal_id_exception()
@@ -24,6 +24,14 @@ class PostCasesDetailsInteractor:
         if is_mandal_data_for_date_already_existed:
             self.presenter.raise_date_already_existed()
             return
+
+        is_invalid_cases_details = not self.storage. \
+                is_valid_cases_details(
+                    confirmed_cases=confirmed_cases,
+                    recovered_cases=recovered_cases,
+                    deaths=deaths)
+        if is_invalid_cases_details:
+            self.presenter.raise_invalid_cases_details()
 
         stats_dto= self.storage.post_cases_details(
             mandal_id=mandal_id,

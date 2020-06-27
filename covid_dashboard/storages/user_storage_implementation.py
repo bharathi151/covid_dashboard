@@ -1,7 +1,7 @@
 from abc import ABC
 from abc import abstractmethod
 from typing import Optional, List
-from django.db.models import Count, Q, F, Prefetch
+from django.db.models import Sum, Count, Q, F, Prefetch
 from covid_dashboard.interactors.storages.dtos import *
 from covid_dashboard.interactors.storages.user_storage_interface import StorageInterface
 from covid_dashboard.models import *
@@ -39,6 +39,40 @@ class StorageImplementation(StorageInterface):
         user_name = user.username
         password = user.password
         return user_name,password
+
+    def is_valid_cases_details(self,
+                                 confirmed_cases: int,
+                                 recovered_cases: int,
+                                 deaths: int):
+        casesdetails = CasesDetails.objects.filter(mandal__district__state_id=1). \
+            values(
+                'mandal__district__state_id','mandal__district__state__state_name'
+                ).annotate(
+                total_confirmed_cases=Sum(
+                    'confirmed_cases'
+                ),
+                total_recovered_cases=Sum(
+                    'recovered_cases'
+                ),
+                total_deaths=Sum(
+                    'deaths'
+                )
+            )
+        if casesdetails:
+            total_confirmed_cases = casesdetails[0]['total_confirmed_cases']
+            total_recovered_cases = casesdetails[0]['total_recovered_cases']
+            total_deaths = casesdetails[0]['total_deaths']
+        else:
+            total_confirmed_cases = 0
+            total_recovered_cases = 0
+            total_deaths = 0
+
+        total_confirmed_cases = total_confirmed_cases + confirmed_cases
+        total_recovered_cases = total_recovered_cases + recovered_cases
+        total_deaths = total_deaths + deaths
+        if total_confirmed_cases < (total_recovered_cases+total_deaths):
+            return False
+        return True
 
     def post_cases_details(self,
                            mandal_id: int,

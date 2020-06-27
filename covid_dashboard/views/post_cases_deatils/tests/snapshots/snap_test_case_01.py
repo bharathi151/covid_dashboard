@@ -7,9 +7,15 @@ from snapshottest import Snapshot
 
 snapshots = Snapshot()
 
-snapshots['TestCase01PostCasesDeatilsAPITestCase::test_case status'] = 404
+snapshots['TestCase01PostCasesDeatilsAPITestCase::test_case status'] = 201
 
-snapshots['TestCase01PostCasesDeatilsAPITestCase::test_case body'] = b'<!doctype html>\n<html lang="en">\n<head>\n  <title>Not Found</title>\n</head>\n<body>\n  <h1>Not Found</h1><p>The requested resource was not found on this server.</p>\n</body>\n</html>'
+snapshots['TestCase01PostCasesDeatilsAPITestCase::test_case body'] = {
+    'date': '30/05/2020',
+    'mandal_id': '1',
+    'total_confirmed_cases': 1,
+    'total_deaths': 1,
+    'total_recovered_cases': 1
+}
 
 snapshots['TestCase01PostCasesDeatilsAPITestCase::test_case header_params'] = {
     'content-language': [
@@ -17,12 +23,12 @@ snapshots['TestCase01PostCasesDeatilsAPITestCase::test_case header_params'] = {
         'en'
     ],
     'content-length': [
-        '179',
+        '115',
         'Content-Length'
     ],
     'content-type': [
         'Content-Type',
-        'text/html'
+        'text/html; charset=utf-8'
     ],
     'vary': [
         'Accept-Language, Origin',
@@ -33,3 +39,13 @@ snapshots['TestCase01PostCasesDeatilsAPITestCase::test_case header_params'] = {
         'X-Frame-Options'
     ]
 }
+
+snapshots['TestCase01PostCasesDeatilsAPITestCase::test_case date'] = '30/05/2020'
+
+snapshots['TestCase01PostCasesDeatilsAPITestCase::test_case total_recovered_cases'] = 1
+
+snapshots['TestCase01PostCasesDeatilsAPITestCase::test_case total_confirmed_cases'] = 1
+
+snapshots['TestCase01PostCasesDeatilsAPITestCase::test_case total_deaths'] = 1
+
+snapshots['TestCase01PostCasesDeatilsAPITestCase::test_case mandal_id'] = '1'

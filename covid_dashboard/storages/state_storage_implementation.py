@@ -193,28 +193,39 @@ class StorageImplementation(StorageInterface):
         return day_statistics_dto
 
     def get_day_wise_districts_cumulative_dto(self) -> DayWiseDistrictTotalCasesDtos:
-        district_objs = District.objects.all(). \
+        district_objs = District.objects.filter(mandals__casesdetails__date__isnull=False). \
              values('id', 'district_name', 'mandals__casesdetails__date'). \
              annotate(
                  total_confirmed_cases=Sum('mandals__casesdetails__confirmed_cases'),
                  total_recovered_cases=Sum('mandals__casesdetails__recovered_cases'),
                  total_deaths=Sum('mandals__casesdetails__deaths')
              )
-        districts_ids = []
-        districts_dates = []
-        districts_objs_dict = defaultdict(lambda: {}) 
-        for district in district_objs:
-            id = district["id"]
-            date = district["mandals__casesdetails__date"]
-            districts_ids.append(id)
-            districts_dates.append(date)
-            districts_objs_dict[id][date] = district
-        districts_dates = list(set(districts_dates))
-        districts_ids = list(set(districts_ids))
+        if not district_objs:
+            districts = District.objects.all()
+            districts_dtos = []
+            for district in districts:
+                districts_dtos.append(DayWiseDistrictTotalCasesDto(
+                    district_name=district.district_name,
+                    district_id=district.id,
+                    day_wise_statistics=[]
+                ))
+        else:
+            districts_ids = []
+            districts_dates = []
+            districts_objs_dict = defaultdict(lambda: {}) 
+            for district in district_objs:
+                id = district["id"]
+                date = district["mandals__casesdetails__date"]
+                districts_ids.append(id)
+                districts_dates.append(date)
+                districts_objs_dict[id][date] = district
+            districts_dates = list(set(districts_dates))
+            districts_ids = list(set(districts_ids))
 
-        districts_dtos = self._get_day_wise_districts_cumulative_stats_dtos(
-                district_objs, districts_ids, districts_dates, districts_objs_dict
-            )
+            districts_dtos = self._get_day_wise_districts_cumulative_stats_dtos(
+                    district_objs, districts_ids, districts_dates, districts_objs_dict
+                )
+
         districts_total_cases_dto = DayWiseDistrictTotalCasesDtos(
             districts=districts_dtos
         )

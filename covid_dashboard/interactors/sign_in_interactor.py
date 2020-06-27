@@ -36,11 +36,11 @@ class LogInUserInteractor:
         oauth_interactor = OAuthUserAuthTokensService(
             oauth2_storage = self.oauth2_storage
         )
-        print("oauth interactor")
+
         storage_resonse = oauth_interactor.create_user_auth_tokens(
             user_id=user_id
         )
-        print("oauth_response")
+
         response = self.presenter.get_log_in_user_response(
              tokens_dto=storage_resonse
         )

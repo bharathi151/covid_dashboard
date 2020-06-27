@@ -32,6 +32,13 @@ class StorageInterface(ABC):
         pass
 
     @abstractmethod
+    def is_valid_cases_details(self,
+                                 confirmed_cases: int,
+                                 recovered_cases: int,
+                                 deaths: int):
+        pass
+
+    @abstractmethod
     def update_cases_details(self,
                            mandal_id: int,
                            date: date,

@@ -9,7 +9,13 @@ snapshots = Snapshot()
 
 snapshots['TestCase01UpdateCasesDeatilsAPITestCase::test_case status'] = 200
 
-snapshots['TestCase01UpdateCasesDeatilsAPITestCase::test_case body'] = b''
+snapshots['TestCase01UpdateCasesDeatilsAPITestCase::test_case body'] = {
+    'date': '30/05/2020',
+    'mandal_id': 1,
+    'total_confirmed_cases': 1,
+    'total_deaths': 1,
+    'total_recovered_cases': 1
+}
 
 snapshots['TestCase01UpdateCasesDeatilsAPITestCase::test_case header_params'] = {
     'content-language': [
@@ -17,7 +23,7 @@ snapshots['TestCase01UpdateCasesDeatilsAPITestCase::test_case header_params'] = 
         'en'
     ],
     'content-length': [
-        '0',
+        '113',
         'Content-Length'
     ],
     'content-type': [
@@ -33,3 +39,13 @@ snapshots['TestCase01UpdateCasesDeatilsAPITestCase::test_case header_params'] = 
         'X-Frame-Options'
     ]
 }
+
+snapshots['TestCase01UpdateCasesDeatilsAPITestCase::test_case date'] = '30/05/2020'
+
+snapshots['TestCase01UpdateCasesDeatilsAPITestCase::test_case mandal_id'] = 1
+
+snapshots['TestCase01UpdateCasesDeatilsAPITestCase::test_case total_recovered_cases'] = 1
+
+snapshots['TestCase01UpdateCasesDeatilsAPITestCase::test_case total_confirmed_cases'] = 1
+
+snapshots['TestCase01UpdateCasesDeatilsAPITestCase::test_case total_deaths'] = 1

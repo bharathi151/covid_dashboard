@@ -12,13 +12,13 @@ snapshots['TestCase01GetStateDailyReportDayWiseAPITestCase::test_case status'] =
 snapshots['TestCase01GetStateDailyReportDayWiseAPITestCase::test_case body'] = {
     'day_wise_statistics': [
         {
-            'date': 'string',
-            'total_confirmed_cases': 1,
+            'date': '30/05/2020',
+            'total_confirmed_cases': 20,
             'total_deaths': 1,
-            'total_recovered_cases': 1
+            'total_recovered_cases': 5
         }
     ],
-    'state_name': 'string'
+    'state_name': 'state 0'
 }
 
 snapshots['TestCase01GetStateDailyReportDayWiseAPITestCase::test_case header_params'] = {
@@ -27,12 +27,12 @@ snapshots['TestCase01GetStateDailyReportDayWiseAPITestCase::test_case header_par
         'en'
     ],
     'content-length': [
-        '134',
+        '150',
         'Content-Length'
     ],
     'content-type': [
         'Content-Type',
-        'application/json'
+        'text/html; charset=utf-8'
     ],
     'vary': [
         'Accept-Language, Origin',

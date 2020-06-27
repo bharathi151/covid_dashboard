@@ -23,6 +23,9 @@ class PresenterInterface(ABC):
     # @abstractmethod
     # def get_add_day_data_to_state_report_response(self, record_id: int):
     #     pass
+    @abstractmethod
+    def raise_invalid_cases_details(self):
+        pass
 
     @abstractmethod
     def get_state_cumulative_details_dto_response(

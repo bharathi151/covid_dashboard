@@ -116,6 +116,8 @@ class PresenterImplementation(PresenterInterface):
                 "day_wise_statistics": day_wise_statistics_details
             })
         return mandals_list
+    def raise_invalid_cases_details(self):
+        raise BadRequest(*INVALID_CASES_DEATILS)
 
     def post_cases_details_response(self, stats_dto: CasesDetailsDto):
         return stats_dto.__dict__

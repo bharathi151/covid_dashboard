@@ -11,8 +11,15 @@ snapshots['TestCase01GetStateCumulativeReportDayWiseAPITestCase::test_case statu
 
 snapshots['TestCase01GetStateCumulativeReportDayWiseAPITestCase::test_case body'] = {
     'day_wise_statistics': [
+        {
+            'date': '27/06/2020',
+            'total_active_cases': 14,
+            'total_confirmed_cases': 20,
+            'total_deaths': 1,
+            'total_recovered_cases': 5
+        }
     ],
-    'state_name': ''
+    'state_name': 'state 0'
 }
 
 snapshots['TestCase01GetStateCumulativeReportDayWiseAPITestCase::test_case header_params'] = {
@@ -21,7 +28,7 @@ snapshots['TestCase01GetStateCumulativeReportDayWiseAPITestCase::test_case heade
         'en'
     ],
     'content-length': [
-        '45',
+        '176',
         'Content-Length'
     ],
     'content-type': [

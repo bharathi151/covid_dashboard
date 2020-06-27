@@ -10,6 +10,32 @@ snapshots = Snapshot()
 snapshots['TestCase01GetDistrictsCumulativeReportDayWiseAPITestCase::test_case status'] = 200
 
 snapshots['TestCase01GetDistrictsCumulativeReportDayWiseAPITestCase::test_case body'] = [
+    {
+        'day_wise_statistics': [
+            {
+                'date': '27/06/2020',
+                'total_active_cases': 7,
+                'total_confirmed_cases': 10,
+                'total_deaths': 0,
+                'total_recovered_cases': 3
+            }
+        ],
+        'district_id': 1,
+        'district_name': 'district 0'
+    },
+    {
+        'day_wise_statistics': [
+            {
+                'date': '27/06/2020',
+                'total_active_cases': 14,
+                'total_confirmed_cases': 20,
+                'total_deaths': 1,
+                'total_recovered_cases': 5
+            }
+        ],
+        'district_id': 2,
+        'district_name': 'district 1'
+    }
 ]
 
 snapshots['TestCase01GetDistrictsCumulativeReportDayWiseAPITestCase::test_case header_params'] = {
@@ -18,7 +44,7 @@ snapshots['TestCase01GetDistrictsCumulativeReportDayWiseAPITestCase::test_case h
         'en'
     ],
     'content-length': [
-        '2',
+        '403',
         'Content-Length'
     ],
     'content-type': [

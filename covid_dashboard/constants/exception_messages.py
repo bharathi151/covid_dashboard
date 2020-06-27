@@ -38,3 +38,7 @@ INVALID_ACCESS = (
     "Access Denied",
     "INVALID_ACCESS"
 )
+INVALID_CASES_DEATILS = (
+    "Invalid data, try with valid data",
+    "INVALID_CASES_DEATILS"
+)

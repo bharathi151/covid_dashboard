@@ -40,7 +40,9 @@ class StateCumulativeDetailsInteractor:
         total_active_cases = total_confirmed_cases - (
                 total_deaths + total_recovered_cases
             )
-
+        invalid_active_cases = not (total_active_cases >= 0)
+        if invalid_active_cases:
+            total_active_cases = 0
         return total_active_cases
 
     def _get_districts_dtos(self, cumulative_dto):
