@@ -1,4 +1,5 @@
 from typing import List
+from gyaan.adapters.service_adapter import get_service_adapter
 from gyaan.interactors.storages.storage_interface import StorageInterface
 from gyaan.interactors.presenters.presenter_interface import PresenterInterface
 from gyaan.interactors.presenters.dtos import *
@@ -50,16 +51,19 @@ class GetPostsInteractor:
             comment_ids=comment_ids
         )
 
-        user_ids = [post_dto.posted_by_id for post_dto in post_dtos]
+        user_ids = [post_dto.posted_by_id for post_dto in post_dtos if post_dto.posted_by_id]
         user_ids += [
-            comment_dto.commented_by_id for comment_dto in comment_dtos
+            comment_dto.commented_by_id for comment_dto in comment_dtos if comment_dto.commented_by_id
         ]
         user_ids += [
             comment_dto.approved_by
             for comment_dto in comment_dtos if comment_dto.approved_by
         ]
         user_ids = list(set(user_ids))
-        user_dtos = self.storage.get_users_details_dtos(user_ids=user_ids)
+        service_adapter = get_service_adapter()
+        user_dtos = service_adapter.auth_service.get_user_dtos(
+            user_ids=user_ids
+        )
 
         complete_posts_dto = CompletePostDetailsDto(
             post_dtos=post_dtos,

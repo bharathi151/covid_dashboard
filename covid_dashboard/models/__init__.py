@@ -1,11 +1,11 @@
-from .user import User
+# from .user import User
 from .state import State
 from .district import District
 from .mandal import Mandal
 from .cases_details import CasesDetails
 
 __all__ = [
-    "User",
+    # "User",
     "State",
     "District",
     "Mandal",
