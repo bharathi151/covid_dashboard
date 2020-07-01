@@ -1,4 +1,4 @@
-from unittest.mock import create_autospec
+from unittest.mock import create_autospec, patch
 import pytest
 import datetime
 from gyaan.interactors.storages.dtos import *
@@ -63,8 +63,10 @@ def test_get_domain_details_when_user_not_member_in_domain_given_raise_invalid_d
         )
     presenter.raise_invalid_domain_member_exception.assert_called_once()
 
+@patch(
+        'gyaan.adapters.auth_service.AuthService.get_user_dtos')
 def test_get_domain_details_when_valid_details_given_where_user_is_domain_expert_return_domain_dto_with_requests_and_requested_users(
-        get_response, domain_dto, experts_dtos
+        get_user_dtos, get_response, domain_dto, experts_dtos
     ):
     #arrange
     domain_id=1
@@ -104,10 +106,11 @@ def test_get_domain_details_when_valid_details_given_where_user_is_domain_expert
     storage.is_user_domain_expert.return_value = True
     storage.get_domain_dto.return_value = domain_dto
     storage.get_domain_experts_ids.return_value = [1, 2]
-    storage.get_domain_experts_dtos.return_value = experts_dtos
+    # storage.get_domain_experts_dtos.return_value = experts_dtos
     storage.get_domain_stats_dto.return_value = domain_stats_dto
     storage.get_domain_join_requests.return_value = requests_dtos
-    storage.get_users_details_dtos.return_value = requested_user_dtos
+    # storage.get_users_details_dtos.return_value = requested_user_dtos
+    get_user_dtos.side_effect = [experts_dtos, requested_user_dtos]
     presenter.get_domain_details_response.return_value = expected_output
     interactor = GetDomainDetailsInteractor(
         storage = storage
@@ -132,14 +135,15 @@ def test_get_domain_details_when_valid_details_given_where_user_is_domain_expert
     storage.get_domain_experts_ids.assert_called_once_with(
         domain_id=domain_id
     )
-    storage.get_domain_experts_dtos.assert_called_once_with(experts_ids=[1, 2])
+    # storage.get_domain_experts_dtos.assert_called_once_with(experts_ids=[1, 2])
     storage.get_domain_stats_dto.assert_called_once_with(domain_id=domain_id)
-    storage.get_users_details_dtos.assert_called_once_with(user_ids=[3, 4])
+    # storage.get_users_details_dtos.assert_called_once_with(user_ids=[3, 4])
     presenter.get_domain_details_response.assert_called_once_with(domain_details_dto=domain_details_dto)
 
-
+@patch(
+        'gyaan.adapters.auth_service.AuthService.get_user_dtos')
 def test_get_domain_details_when_valid_details_given_where_user_is_not_domain_expert_return_domain_dto_with_empty_requests_and_requested_users(
-        get_response, domain_dto, experts_dtos
+        get_user_dtos, get_response, domain_dto, experts_dtos
     ):
     #arrange
     domain_id=1
@@ -173,10 +177,11 @@ def test_get_domain_details_when_valid_details_given_where_user_is_not_domain_ex
     storage.is_user_domain_expert.return_value = False
     storage.get_domain_dto.return_value = domain_dto
     storage.get_domain_experts_ids.return_value = [1, 2]
-    storage.get_domain_experts_dtos.return_value = experts_dtos
+    # storage.get_domain_experts_dtos.return_value = experts_dtos
     storage.get_domain_stats_dto.return_value = domain_stats_dto
     storage.get_domain_join_requests.return_value = requests_dtos
-    storage.get_users_details_dtos.return_value = requested_user_dtos
+    # storage.get_users_details_dtos.return_value = requested_user_dtos
+    get_user_dtos.side_effect = [experts_dtos, []]
     presenter.get_domain_details_response.return_value = expected_output
     interactor = GetDomainDetailsInteractor(
         storage = storage
@@ -201,6 +206,6 @@ def test_get_domain_details_when_valid_details_given_where_user_is_not_domain_ex
     storage.get_domain_experts_ids.assert_called_once_with(
         domain_id=domain_id
     )
-    storage.get_domain_experts_dtos.assert_called_once_with(experts_ids=[1, 2])
+    # storage.get_domain_experts_dtos.assert_called_once_with(experts_ids=[1, 2])
     storage.get_domain_stats_dto.assert_called_once_with(domain_id=domain_id)
     presenter.get_domain_details_response.assert_called_once_with(domain_details_dto=domain_details_dto)
