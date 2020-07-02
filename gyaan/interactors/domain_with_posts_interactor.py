@@ -2,6 +2,8 @@ from gyaan.interactors.presenters.presenter_interface import PresenterInterface
 from gyaan.interactors.storages.storage_interface import StorageInterface
 from gyaan.constants.exceptions import *
 from gyaan.interactors.presenters.dtos import DomainDetailsWithPostsDto
+
+
 class DomainWithPostsInteractor:
 
     def __init__(self, storage: StorageInterface):
@@ -25,6 +27,7 @@ class DomainWithPostsInteractor:
             return presenter.raise_invalid_limit_exception(error=error)
         except InvalidOffset as error:
             return presenter.raise_invalid_offset_exception(error=error)
+
         return presenter.get_domain_with_posts_response(
             domain_with_posts_dto=domain_with_posts_dto
         )
@@ -59,7 +62,3 @@ class DomainWithPostsInteractor:
             domain_details=domain_details,
             post_details=domain_posts
         )
-
-
-
-

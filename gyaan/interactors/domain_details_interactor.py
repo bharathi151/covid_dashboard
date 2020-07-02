@@ -1,4 +1,5 @@
 from typing import List
+
 from gyaan.interactors.storages.storage_interface import StorageInterface
 from gyaan.adapters.service_adapter import get_service_adapter
 from gyaan.interactors.presenters.presenter_interface import PresenterInterface
@@ -29,7 +30,8 @@ class GetDomainDetailsInteractor:
             )
 
     def get_domain_details(self, domain_id: int, user_id: int):
-        is_invalid_domain_id = not self.storage.is_valid_domain_id(domain_id=domain_id)
+        is_invalid_domain_id = not self.storage. \
+            is_valid_domain_id(domain_id=domain_id)
         if is_invalid_domain_id:
             raise InvalidDomainId
 
@@ -46,7 +48,8 @@ class GetDomainDetailsInteractor:
             user_ids=experts_ids
         )
         # experts_dtos = self.storage.get_domain_experts_dtos(experts_ids=experts_ids)
-        domain_stats_dto = self.storage.get_domain_stats_dto(domain_id=domain_id)
+        domain_stats_dto = self.storage. \
+            get_domain_stats_dto(domain_id=domain_id)
 
         is_user_domain_expert = self.storage.is_user_domain_expert(
             domain_id=domain_id, user_id=user_id
@@ -76,4 +79,3 @@ class GetDomainDetailsInteractor:
             user_ids=requested_user_ids
         )
         return domain_join_requests, requests_user_dtos
-

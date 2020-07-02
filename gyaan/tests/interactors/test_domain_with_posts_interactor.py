@@ -1,7 +1,8 @@
-from unittest.mock import create_autospec
+from unittest.mock import create_autospec, patch
 import pytest
 import datetime
-from unittest.mock import patch
+from django_swagger_utils.drf_server.exceptions import NotFound, BadRequest
+
 from gyaan.interactors.storages.dtos import *
 from gyaan.interactors.presenters.dtos import *
 from gyaan.constants.exceptions import *
@@ -10,7 +11,7 @@ from gyaan.interactors.domain_posts_interactor import DomainPostsInteractor
 from gyaan.interactors.domain_details_interactor import GetDomainDetailsInteractor
 from gyaan.interactors.presenters.presenter_interface import PresenterInterface
 from gyaan.interactors.storages.storage_interface import StorageInterface
-from django_swagger_utils.drf_server.exceptions import NotFound, BadRequest
+
 
 @patch.object(GetDomainDetailsInteractor,'get_domain_details')
 @patch.object(DomainPostsInteractor,'get_domain_posts')
@@ -26,6 +27,7 @@ def test_get_domain_with_posts_when_invalid_domain_id_given_raise_invalid_domain
     presenter = create_autospec(PresenterInterface)
     get_domain_details.side_effect = InvalidDomainId
     presenter.raise_invalid_domain_id_exception.side_effect = NotFound
+
     interactor = DomainWithPostsInteractor(
         storage = storage
     )
@@ -58,8 +60,10 @@ def test_get_domain_with_posts_when_user_not_member_in_domain_given_raise_invali
 
     storage = create_autospec(StorageInterface)
     presenter = create_autospec(PresenterInterface)
+
     get_domain_details.side_effect = UserNotDomainFollower
     presenter.raise_invalid_domain_member_exception.side_effect = BadRequest
+
     interactor = DomainWithPostsInteractor(
         storage = storage
     )
@@ -91,9 +95,11 @@ def test_get_domain_with_posts_when_invalid_limit_given_raise_invalid_limit_exce
 
     storage = create_autospec(StorageInterface)
     presenter = create_autospec(PresenterInterface)
+
     get_domain_details.return_value = domain_details_dto
     get_domain_posts.side_effect = InvalidLimit(invalid_limit=limit)
     presenter.raise_invalid_limit_exception.side_effect = BadRequest
+
     interactor = DomainWithPostsInteractor(
         storage = storage
     )
@@ -131,9 +137,11 @@ def test_get_domain_with_posts_when_invalid_offset_given_raise_invalid_offset_ex
 
     storage = create_autospec(StorageInterface)
     presenter = create_autospec(PresenterInterface)
+
     get_domain_details.return_value = domain_details_dto
     get_domain_posts.side_effect = InvalidOffset(invalid_offset=offset)
     presenter.raise_invalid_offset_exception.side_effect = BadRequest
+
     interactor = DomainWithPostsInteractor(
         storage = storage
     )
@@ -172,9 +180,11 @@ def test_get_domain_with_posts_when_valid_details_given_return_domain_with_posts
 
     storage = create_autospec(StorageInterface)
     presenter = create_autospec(PresenterInterface)
+
     get_domain_posts.return_value = complete_posts_dto
     get_domain_details.return_value = domain_details_dto
     presenter.get_domain_with_posts_response.return_value = get_response
+
     interactor = DomainWithPostsInteractor(
         storage = storage
     )

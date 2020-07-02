@@ -24,7 +24,10 @@ class DomainPostsInteractor:
             return presenter.raise_invalid_limit_exception(error=error)
         except InvalidOffset as error:
             return presenter.raise_invalid_offset_exception(error=error)
-        return presenter.get_domain_posts_response(posts_complete_details_dtos=posts_complete_details_dtos)
+        return presenter. \
+        get_domain_posts_response(
+            posts_complete_details_dtos=posts_complete_details_dtos
+        )
 
     def get_domain_posts(self, user_id: int, domain_id: int,
                          offset: int, limit: int):
@@ -37,6 +40,7 @@ class DomainPostsInteractor:
                 is_user_domain_follower(domain_id=domain_id, user_id=user_id)
         if is_user_not_domain_member:
             raise UserNotDomainFollower
+
         is_invalid_limit = limit <= 0
         if is_invalid_limit:
             raise InvalidLimit(invalid_limit=limit)
@@ -44,9 +48,10 @@ class DomainPostsInteractor:
         is_invalid_offset = offset < 0
         if is_invalid_offset:
             raise InvalidOffset(invalid_offset=offset)
+
         post_ids = self.storage.get_domain_post_ids(
                 domain_id=domain_id, offset=offset, limit=limit
-            )
+        )
 
         from gyaan.interactors.get_posts_interactor import GetPostsInteractor
         get_post_interactor = GetPostsInteractor(storage=self.storage)

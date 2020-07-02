@@ -12,5 +12,3 @@ class AuthService:
 
         # TODO: Convert to DTO in this app
         return user_dtos
-
-

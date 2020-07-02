@@ -1,4 +1,5 @@
 from typing import List
+
 from gyaan.adapters.service_adapter import get_service_adapter
 from gyaan.interactors.storages.storage_interface import StorageInterface
 from gyaan.interactors.presenters.presenter_interface import PresenterInterface
@@ -30,11 +31,13 @@ class GetPostsInteractor:
         if invalid_post_ids:
             raise InvalidPostIds(invalid_post_ids=invalid_post_ids)
         post_dtos = self.storage.get_posts_dtos(post_ids=unique_post_ids)
-        post_tags_dtos = self.storage.get_posts_tags_dtos(post_ids=unique_post_ids)
+        post_tags_dtos = self.storage. \
+            get_posts_tags_dtos(post_ids=unique_post_ids)
         tag_ids = [tag.tag_id for tag in post_tags_dtos]
         tag_dtos = self.storage.get_tags_dtos(tag_ids=tag_ids)
 
-        post_reaction_counts_dtos = self.storage.get_posts_reactions_count(post_ids=unique_post_ids)
+        post_reaction_counts_dtos = self.storage. \
+                get_posts_reactions_count(post_ids=unique_post_ids)
         posts_comment_counts_dtos = self.storage.get_posts_comments_count(
             post_ids=unique_post_ids
         )
@@ -51,9 +54,13 @@ class GetPostsInteractor:
             comment_ids=comment_ids
         )
 
-        user_ids = [post_dto.posted_by_id for post_dto in post_dtos if post_dto.posted_by_id]
+        user_ids = [
+            post_dto.posted_by_id 
+            for post_dto in post_dtos if post_dto.posted_by_id
+        ]
         user_ids += [
-            comment_dto.commented_by_id for comment_dto in comment_dtos if comment_dto.commented_by_id
+            comment_dto.commented_by_id 
+            for comment_dto in comment_dtos if comment_dto.commented_by_id
         ]
         user_ids += [
             comment_dto.approved_by

@@ -1,13 +1,14 @@
 from unittest.mock import create_autospec, patch
 import datetime
 import pytest
+from django_swagger_utils.drf_server.exceptions import NotFound, BadRequest
+
 
 from gyaan.interactors.storages.dtos import *
 from gyaan.interactors.presenters.dtos import *
 from gyaan.interactors.get_posts_interactor import GetPostsInteractor
 from gyaan.interactors.presenters.presenter_interface import PresenterInterface
 from gyaan.interactors.storages.storage_interface import StorageInterface
-from django_swagger_utils.drf_server.exceptions import NotFound, BadRequest
 from gyaan.adapters.service_adapter import ServiceAdapter
 
 def test_get_posts_with_invalid_post_ids_return_invalid_post_ids_exception():
@@ -37,9 +38,9 @@ def test_get_posts_with_invalid_post_ids_return_invalid_post_ids_exception():
     assert error_obj == [2, 3]
 
 @patch(
-        'gyaan.adapters.auth_service.AuthService.get_user_dtos')
+        'gyaan.adapters.auth_service.AuthService.interface')
 def test_get_posts_with_duplicate_post_ids_return_unique_posts_details(
-    get_user_dtos, get_response, posts_dtos, user_dtos_without_duplication,
+    interface, get_response, posts_dtos, user_dtos_without_duplication,
     posts_comments_count_dtos,posts_reaction_counts_dtos,
     comment_replies_counts_dtos, comments_reactions_counts_dtos,
     comment_dtos, post_tags_dtos, tag_dtos):
@@ -71,7 +72,7 @@ def test_get_posts_with_duplicate_post_ids_return_unique_posts_details(
             tags=tag_dtos,
             users_dtos=user_dtos
         )
-    get_user_dtos.return_value = user_dtos_without_duplication
+    interface.get_user_dtos.return_value = user_dtos_without_duplication
     storage.get_invalid_post_ids.return_value = []
     storage.get_posts_dtos.return_value = posts_dtos
     storage.get_posts_tags_dtos.return_value = post_tags_dtos
@@ -108,9 +109,9 @@ def test_get_posts_with_duplicate_post_ids_return_unique_posts_details(
     presenter.get_posts_response.assert_called_once_with(complete_posts_dto=complete_posts_dto)
 
 @patch(
-        'gyaan.adapters.auth_service.AuthService.get_user_dtos')
+        'gyaan.adapters.auth_service.AuthService.interface')
 def test_get_posts_with_out_duplicate_post_ids_return_all_posts_details(
-        get_user_dtos, get_response, posts_dtos, user_dtos,
+        interface , get_response, posts_dtos, user_dtos,
         posts_comments_count_dtos,posts_reaction_counts_dtos,
         comment_replies_counts_dtos, comments_reactions_counts_dtos,
         comment_dtos_approved_by_user, post_tags_dtos, tag_dtos,
@@ -136,7 +137,7 @@ def test_get_posts_with_out_duplicate_post_ids_return_all_posts_details(
     comment_ids = [1, 2]
     complete_posts_dto = complete_posts_dto
 
-    get_user_dtos.return_value = user_dtos
+    interface.get_user_dtos.return_value = user_dtos
     storage.get_invalid_post_ids.return_value = []
     storage.get_posts_dtos.return_value = posts_dtos
     storage.get_posts_tags_dtos.return_value = post_tags_dtos
@@ -173,9 +174,9 @@ def test_get_posts_with_out_duplicate_post_ids_return_all_posts_details(
     presenter.get_posts_response.assert_called_once_with(complete_posts_dto=complete_posts_dto)
 
 @patch(
-        'gyaan.adapters.auth_service.AuthService.get_user_dtos')
+        'gyaan.adapters.auth_service.AuthService.interface')
 def test_get_posts_with_duplicate_user_ids_return_posts_details_with_unique_user_ids(
-    get_user_dtos, get_response, posts_dtos, comment_dtos_approved_by_user,
+    interface, get_response, posts_dtos, comment_dtos_approved_by_user,
     posts_reaction_counts_dtos, posts_comments_count_dtos, post_tags_dtos,
     comments_reactions_counts_dtos, comment_replies_counts_dtos, tag_dtos,
     complete_posts_dto,user_dtos
@@ -200,7 +201,7 @@ def test_get_posts_with_duplicate_user_ids_return_posts_details_with_unique_user
     comment_ids = [1, 2]
     complete_posts_dto = complete_posts_dto
 
-    get_user_dtos.return_value = user_dtos
+    interface.get_user_dtos.return_value = user_dtos
     storage.get_invalid_post_ids.return_value = []
     storage.get_posts_dtos.return_value = posts_dtos
     storage.get_posts_tags_dtos.return_value = post_tags_dtos
@@ -235,4 +236,3 @@ def test_get_posts_with_duplicate_user_ids_return_posts_details_with_unique_user
     storage.get_comment_replies_count.assert_called_once_with(comment_ids=comment_ids)
     storage.get_comment_details_dtos.assert_called_once_with(comment_ids=comment_ids)
     presenter.get_posts_response.assert_called_once_with(complete_posts_dto=complete_posts_dto)
-

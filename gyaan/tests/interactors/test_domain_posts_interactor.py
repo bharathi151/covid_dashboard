@@ -1,14 +1,14 @@
-from unittest.mock import create_autospec
+from unittest.mock import create_autospec, patch
+from django_swagger_utils.drf_server.exceptions import NotFound, BadRequest
 import pytest
 import datetime
-from unittest.mock import patch
+
 from gyaan.interactors.storages.dtos import *
 from gyaan.interactors.presenters.dtos import *
 from gyaan.interactors.domain_posts_interactor import DomainPostsInteractor
 from gyaan.interactors.get_posts_interactor import GetPostsInteractor
 from gyaan.interactors.presenters.presenter_interface import PresenterInterface
 from gyaan.interactors.storages.storage_interface import StorageInterface
-from django_swagger_utils.drf_server.exceptions import NotFound, BadRequest
 
 
 def test_get_domain_posts_when_invalid_domain_id_given_raise_invalid_domain_id_exception():
@@ -49,6 +49,7 @@ def test_get_domain_posts_when_user_not_member_in_domain_given_raise_invalid_dom
 
     storage = create_autospec(StorageInterface)
     presenter = create_autospec(PresenterInterface)
+
     storage.is_valid_domain_id.return_value = True
     storage.is_user_domain_follower.return_value = False
     presenter.raise_invalid_domain_member_exception.side_effect = BadRequest
@@ -82,6 +83,7 @@ def test_get_domain_posts_when_invalid_limit_given_raise_invalid_limit_exception
 
     storage = create_autospec(StorageInterface)
     presenter = create_autospec(PresenterInterface)
+
     storage.is_valid_domain_id.return_value = True
     storage.is_user_domain_follower.return_value = True
     presenter.raise_invalid_limit_exception.side_effect = BadRequest
@@ -119,12 +121,14 @@ def test_get_domain_posts_when_invalid_offset_given_raise_invalid_offset_excepti
 
     storage = create_autospec(StorageInterface)
     presenter = create_autospec(PresenterInterface)
+
     storage.is_valid_domain_id.return_value = True
     storage.is_user_domain_follower.return_value = True
     presenter.raise_invalid_offset_exception.side_effect = BadRequest
     interactor = DomainPostsInteractor(
         storage = storage
     )
+
     #act
     with pytest.raises(BadRequest):
         interactor.get_domain_posts_wrapper(
@@ -134,6 +138,7 @@ def test_get_domain_posts_when_invalid_offset_given_raise_invalid_offset_excepti
             limit=limit,
             offset=offset
         )
+
     #assert
     storage.is_valid_domain_id.assert_called_once_with(
         domain_id=domain_id
@@ -159,6 +164,7 @@ def test_get_domain_posts_when_valid_details_given_return_domain_posts(GetPostsI
 
     storage = create_autospec(StorageInterface)
     presenter = create_autospec(PresenterInterface)
+
     storage.is_valid_domain_id.return_value = True
     storage.is_user_domain_follower.return_value = True
     storage.get_domain_post_ids.return_value = [1]
