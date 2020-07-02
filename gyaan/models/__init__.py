@@ -1,18 +1,4 @@
-# from .user import User
-from .state import State
-from .district import District
-from .mandal import Mandal
-from .cases_details import CasesDetails
-
-__all__ = [
-    # "User",
-    "State",
-    "District",
-    "Mandal",
-    "CasesDetails"
-]
-
-
+__all__ = []
 
 # class DummyModel(AbstractDateTimeModel):
 #     """

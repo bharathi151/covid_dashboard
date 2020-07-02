@@ -193,9 +193,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',  # django sessions used in admin
     'django.contrib.messages',  # info, success, error message in response. admin requires this
     'django.contrib.staticfiles',  # host the static files
-    'covid_dashboard'
+    'covid_dashboard',
+    'user_authentication'
 ]
-AUTH_USER_MODEL = 'covid_dashboard.User'
+AUTH_USER_MODEL = 'user_authentication.User'
 
 DEFAULT_OAUTH_APPLICATION_NAME = "CovidDashboard"
 DEFAULT_OAUTH_CLIENT_ID =""

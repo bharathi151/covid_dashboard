@@ -1,0 +1,537 @@
+{
+    "swagger": "2.0",
+    "host": "127.0.0.1:8000",
+    "basePath": "/api/covid_dashboard/",
+    "info": {
+        "version": "1.0.0",
+        "title": "Simple Internal Knowledge Sharing Platform API",
+        "description": "A simple API to learn how to write OpenAPI Specification"
+    },
+    "schemes": [
+        "http",
+        "https"
+    ],
+    "consumes": [
+        "application/json"
+    ],
+    "produces": [
+        "application/json"
+    ],
+    "securityDefinitions": {
+        "oauth": {
+            "tokenUrl": "http://auth.ibtspl.com/oauth2/",
+            "flow": "password",
+            "scopes": {
+                "read": "read users",
+                "write": "create users",
+                "update": "update users",
+                "delete": "delete users",
+                "superuser": "super user permission"
+            },
+            "type": "oauth2"
+        }
+    },
+    "definitions": {
+        "SignInDetails": {
+            "type": "object",
+            "properties": {
+                "user_name": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "user_name",
+                "password"
+            ]
+        },
+        "AllDomains": {
+            "type": "object",
+            "properties": {
+                "following_domains": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "domain_name": {
+                                "type": "string"
+                            },
+                            "domain_id": {
+                                "type": "integer"
+                            },
+                        },
+                        "required": [
+                            "domain_name",
+                            "domain_id"
+                        ]
+                    }
+                },
+                "suggest_domains": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "domain_name": {
+                                "type": "string"
+                            },
+                            "domain_id": {
+                                "type": "integer"
+                            },
+                            "status": {
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+                            "domain_name",
+                            "domain_id",
+                            "status"
+                        ]
+                    }
+                },
+                "my_posts": {
+                    "type": "integer"
+                },
+                "your_pendings": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "domain_name": {
+                                "type": "string"
+                            },
+                            "domain_id": {
+                                "type": "integer"
+                            },
+                            "pending_count": {
+                                "type": "integer"
+                            }
+                        },
+                        "required": [
+                            "domain_name",
+                            "domain_id",
+                            "pending_count"
+                        ]
+                    }
+                },
+                "pending_for_review": {
+                    "type": "integer"
+                },
+                "requests": {
+                    "type": "object",
+                    "properties": {
+                        "requests_count": {
+                            "type": "integer"
+                        },
+                        "requested_users": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "user_id": {
+                                        "type": "integer"
+                                    }
+                                },
+                                "required": [
+                                    "name",
+                                    "user_id"
+                                ]
+                            }
+                        }
+                    },
+                    "required": [
+                        "requests_count",
+                        "requested_users"
+                    ]
+                }
+            },
+            "required": [
+                "following_domains",
+                "suggest_domains",
+                "my_posts",
+                "your_pendings",
+                "pending_for_review",
+                "requests"
+            ]
+        },
+        "User": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "user_id": {
+                    "type": "integer"
+                },
+                "profile_pic": {
+                    "type": "string",
+                    "format": "url"
+                }
+            },
+            "required": [
+                "name",
+                "user_id",
+                "profile_pic",
+            ]
+        },
+        "Comment": {
+            "type": "object",
+            "properties": {
+                "post_id": {
+                    "type": "integer"
+                },
+                "comment_content": {
+                    "type": "string"
+                },
+                "comment_id": {
+                    "type": "integer"
+                },
+                "commented_by": {
+                    "$ref": "#/definitions/User"
+                },
+                "commented_at": {
+                    "format": "datetime"
+                },
+                "replies_count": {
+                    "type": "integer"
+                },
+                "reactions_count": {
+                    "type": "integer"
+                }
+            },
+            "required": [
+                "commented_by",
+                "comment_id",
+                "comment_content",
+                "commented_at",
+                "replies_count",
+                "reactions_count"
+            ]
+        },
+        "CommentsOfAPost": {
+            "type": "array",
+            "items": {
+                "$ref": "#/definitions/Comment"
+            }
+        },
+        "Answer": {
+            "allOf": [{
+                    "$ref": "#/definitions/Comment"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "approved_by": {
+                            "type": "integer"
+                        }
+                    },
+                    "required": [
+                        "approved_by"
+                    ]
+                }
+            ]
+        },
+        "DomainDetails": {
+            "type": "object",
+            "properties": {
+                "domain_name": {
+                    "type": "string"
+                },
+                "domain_description": {
+                    "type": "string"
+                },
+                "domain_id": {
+                    "type": "integer"
+                },
+                "experts": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/User"
+                    }
+                },
+                "followers_count": {
+                    "type": "integer"
+                },
+                "posts_count": {
+                    "type": "integer"
+                }
+            },
+            "required": [
+                "domain_name",
+                "domain_description",
+                "domain_id",
+                "experts",
+                "posts_count",
+                "followers_count"
+            ]
+        },
+        "PostDetails": {
+            "type": "object",
+            "properties": {
+                "post_id": {
+                    "type": "integer"
+                },
+                "posted_at": {
+                    "type": "string",
+                    "format": "datetime"
+                },
+                "posted_by": {
+                    "$ref": "#/definitions/User"
+                },
+                "post_title": {
+                    "type": "string"
+                },
+                "comments_count": {
+                    "type": "integer"
+                },
+                "reactions_count": {
+                    "type": "integer"
+                },
+                "answer": {
+                    "$ref": "#/definitions/Answer"
+                },
+                "comments": {
+                    "$ref": "#/definitions/CommentsOfAPost"
+                }
+            },
+            "required": [
+                "post_title",
+                "post_id",
+                "posted_at",
+                "replies_count",
+                "reactions_count",
+                "answer",
+                "comments"
+            ]
+        }
+    },
+    "parameters": {
+        "SignInUser": {
+            "name": "user_details",
+            "in": "body",
+            "required": true,
+            "description": "The details has needed to sign up.",
+            "schema": {
+                "$ref": "#/definitions/SignInDetails"
+            }
+        },
+        "DomainId": {
+            "name": "domain_id",
+            "in": "path",
+            "type": "integer",
+            "required": true,
+            "description": "enter domain_id for posts"
+
+        },
+        "PostParameters": {
+            "name": "user_details",
+            "in": "body",
+            "required": true,
+            "description": "enter the data of a day to insert into state details.",
+            "schema": {
+                "type": "object",
+                "properties": {
+                    "domain_id": {
+                        "type": "integer"
+                    },
+                    "tags": {
+                        "type": "array",
+                        "items": {
+                            "type": "integer"
+                        }
+                    },
+                    "title": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "domain_id",
+                    "tags",
+                    "title",
+                    "description"
+                ]
+            }
+        },
+    },
+    "responses": {},
+    "paths": {
+        "/sign_in/v1/": {
+            "post": {
+                "security": [],
+                "operationId": "sign_in_user",
+                "parameters": [{
+                    "$ref": "#/parameters/SignInUser"
+                }],
+                "responses": {
+                    "200": {
+                        "description": "Successful",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "user_id": {
+                                    "type": "integer"
+                                },
+                                "access_token": {
+                                    "type": "string"
+                                },
+                                "refresh_token": {
+                                    "type": "string"
+                                },
+                                "expires_in": {
+                                    "type": "string"
+                                }
+                            },
+                            "required": [
+                                "access_token"
+                            ]
+                        }
+                    },
+                    "409": {
+                        "description": "User name already exists"
+                    },
+                    "401": {
+                        "description": "Incorrect password"
+                    },
+                    "400": {
+                        "description": "Invalid username and password"
+                    }
+                }
+            }
+        },
+        "/domains/v1/": {
+            "get": {
+                "security": [
+                    "oauth": [
+                        "read",
+                        "write"
+                    ]
+                ],
+                "operationId": "get_user_domains",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Successful",
+                        "schema": {
+                            "$ref": "#/definitions/AllDomains"
+                        }
+                    }
+                }
+            }
+        },
+        "/domain/{domain_id}/posts/v1/": {
+            "get": {
+                "security": [
+                    "oauth": [
+                        "read",
+                        "write"
+                    ]
+                ],
+                "operationId": "get_domain_posts",
+                "parameters": [{
+                    "$ref": "#/parameters/DomainId"
+                }],
+                "responses": {
+                    "200": {
+                        "description": "Successful",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/PostDetails"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/user_posts/v1/": {
+            "get": {
+                "security": [
+                    "oauth": [
+                        "read",
+                        "write"
+                    ]
+                ],
+                "operationId": "get_user_posts",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Successful",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/PostDetails"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/domain/{domain_id}/details/v1/": {
+            "get": {
+                "security": [
+                    "oauth": [
+                        "read",
+                        "write"
+                    ]
+                ],
+                "operationId": "get_domain_deatils",
+                "parameters": [{ "$ref": "#/parameters/DomainId" }],
+                "responses": {
+                    "200": {
+                        "description": "Successful",
+                        "schema": {
+                            "$ref": "#/definitions/DomainDetails"
+                        }
+                    }
+                }
+            }
+        },
+        "/domain/{domain_id}/post/v1/": {
+            "post": {
+                "security": [
+                    "oauth": [
+                        "read",
+                        "write"
+                    ]
+                ],
+                "operationId": "create post",
+                "parameters": [{
+                        "$ref": "#/parameters/DomainId"
+                    },
+                    {
+                        "$ref": "#/parameters/PostParameters"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "title": {
+                                    "type": "string"
+                                },
+                                "description": {
+                                    "type": "string"
+                                },
+                                "tags": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "integer"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

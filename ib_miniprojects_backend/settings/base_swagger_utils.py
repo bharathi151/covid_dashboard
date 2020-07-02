@@ -60,7 +60,8 @@ SWAGGER_UTILS = {
         }
     },
     "APPS": {
-        "covid_dashboard": {}
+        "covid_dashboard": {},
+        'user_authentication': {}
     },
     "HOST": os.environ.get('APIGATEWAY_ENDPOINT', '127.0.0.1:8000'),
 }
