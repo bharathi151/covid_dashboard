@@ -19,8 +19,20 @@ class UpdateCasesDetailsInteractor:
         if is_invalid_mandal_id:
             self.presenter.raise_invalid_mandal_id_exception()
             return
-        is_mandal_data_for_date_already_existed = self.storage. \
+        is_mandal_data_for_date_not_existed = not self.storage. \
                 is_mandal_data_for_date_already_existed(date=date, mandal_id=mandal_id)
+
+        if is_mandal_data_for_date_not_existed:
+            self.presenter.raise_stats_not_existed()
+            return
+
+        stats_dto = self.storage.update_cases_details(
+            mandal_id=mandal_id,
+            date=date,
+            confirmed_cases=confirmed_cases,
+            deaths=deaths,
+            recovered_cases=recovered_cases
+        )
 
         is_invalid_cases_details = not self.storage. \
                 is_valid_cases_details(
@@ -29,17 +41,6 @@ class UpdateCasesDetailsInteractor:
                     deaths=deaths)
         if is_invalid_cases_details:
             self.presenter.raise_invalid_cases_details()
-
-        if is_mandal_data_for_date_already_existed:
-            stats_dto = self.storage.update_cases_details(
-                mandal_id=mandal_id,
-                date=date,
-                confirmed_cases=confirmed_cases,
-                deaths=deaths,
-                recovered_cases=recovered_cases
-            )
-        else:
-            self.presenter.raise_stats_not_existed()
             return
 
         response = self.presenter.update_cases_details_response(

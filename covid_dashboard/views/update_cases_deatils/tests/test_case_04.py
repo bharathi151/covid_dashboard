@@ -46,6 +46,12 @@ class TestCase04UpdateCasesDeatilsAPITestCase(CustomAPITestCase):
             username=username, password=password
         )
         mandal = MandalFactory()
+        CasesDetailsFactory.create(
+            mandal=mandal, date=self.date, 
+            confirmed_cases=5,
+            recovered_cases=2,
+            deaths=1
+        )
 
 
     def test_case(self):

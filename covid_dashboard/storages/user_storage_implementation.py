@@ -75,16 +75,14 @@ class StorageImplementation(StorageInterface):
         return True
 
     def post_cases_details(self,
-                           mandal_id: int,
-                           date: date,
-                           confirmed_cases: int,
-                           recovered_cases: int,
-                           deaths:int) -> int:
+                           cases_details_dto: CasesDetailsDto) -> PostCasesDetailsDto:
         stats_obj= CasesDetails.objects.create(
-            date=date, mandal_id=mandal_id, recovered_cases=recovered_cases,
-            confirmed_cases=confirmed_cases, deaths=deaths
+            date=cases_details_dto.date, mandal_id=cases_details_dto.mandal_id,
+            recovered_cases=cases_details_dto.recovered_cases,
+            confirmed_cases=cases_details_dto.confirmed_cases,
+            deaths=cases_details_dto.deaths
         )
-        stats_dto = CasesDetailsDto(
+        stats_dto = PostCasesDetailsDto(
             mandal_id=stats_obj.mandal_id,
             date=stats_obj.date.strftime("%d/%m/%Y"),
             total_confirmed_cases=stats_obj.confirmed_cases,
@@ -108,18 +106,20 @@ class StorageImplementation(StorageInterface):
         return True
 
     def update_cases_details(self,
-                             date: date,
-                             mandal_id: int,
-                             confirmed_cases:int,
-                             recovered_cases:int,
-                             deaths:int) -> CasesDetailsDto:
-        stats = CasesDetails.objects.filter(mandal_id=mandal_id, date=date)
-        stats.update(date=date, mandal_id=mandal_id,
-                     confirmed_cases=confirmed_cases,
-                     recovered_cases=recovered_cases,
-                     deaths=deaths)
-        stats_obj = CasesDetails.objects.get(mandal_id=mandal_id, date=date)
-        stats_dto = CasesDetailsDto(
+                             cases_details_dto: CasesDetailsDto) -> PostCasesDetailsDto:
+        CasesDetails.objects.filter(
+            mandal_id=cases_details_dto.mandal_id, date=cases_details_dto.date
+            ).update(
+                date=cases_details_dto.date,
+                mandal_id=cases_details_dto.mandal_id,
+                confirmed_cases=cases_details_dto.confirmed_cases,
+                recovered_cases=cases_details_dto.recovered_cases,
+                deaths=cases_details_dto.deaths
+            )
+        stats_obj = CasesDetails.objects.get(
+            mandal_id=cases_details_dto.mandal_id, date=cases_details_dto.date
+        )
+        stats_dto = PostCasesDetailsDto(
             mandal_id=stats_obj.mandal_id,
             date=stats_obj.date.strftime("%d/%m/%Y"),
             total_confirmed_cases=stats_obj.confirmed_cases,

@@ -12,7 +12,7 @@ snapshots['TestCase01UpdateCasesDeatilsAPITestCase::test_case status'] = 200
 snapshots['TestCase01UpdateCasesDeatilsAPITestCase::test_case body'] = {
     'date': '30/05/2020',
     'mandal_id': 1,
-    'total_confirmed_cases': 1,
+    'total_confirmed_cases': 3,
     'total_deaths': 1,
     'total_recovered_cases': 1
 }
@@ -46,6 +46,6 @@ snapshots['TestCase01UpdateCasesDeatilsAPITestCase::test_case mandal_id'] = 1
 
 snapshots['TestCase01UpdateCasesDeatilsAPITestCase::test_case total_recovered_cases'] = 1
 
-snapshots['TestCase01UpdateCasesDeatilsAPITestCase::test_case total_confirmed_cases'] = 1
+snapshots['TestCase01UpdateCasesDeatilsAPITestCase::test_case total_confirmed_cases'] = 3
 
 snapshots['TestCase01UpdateCasesDeatilsAPITestCase::test_case total_deaths'] = 1

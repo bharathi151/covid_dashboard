@@ -33,7 +33,12 @@ class TestCase01GetStateDailyReportDayWiseAPITestCase(CustomAPITestCase):
         super(TestCase01GetStateDailyReportDayWiseAPITestCase, self).setupUser(
             username=username, password=password
         )
-        mandal = MandalFactory()
+        state = StateFactory()
+        StateFactory.reset_sequence(0)
+        district = DistrictFactory(state=state)
+        DistrictFactory.reset_sequence(0)
+        mandal = MandalFactory(district=district)
+        MandalFactory.reset_sequence(0)
         CasesDetailsFactory.create(mandal=mandal, date=self.date, 
                             confirmed_cases=20,
                             recovered_cases=5,

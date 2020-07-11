@@ -5,15 +5,29 @@ from django_swagger_utils.drf_server.exceptions import (
 )
 from covid_dashboard.constants.exception_messages import *
 from covid_dashboard.interactors.presenters.presenter_interface import \
-    PresenterInterface
+    PresenterInterface, PostCasesPresenterInterface
 from common.dtos import UserAuthTokensDTO
 from covid_dashboard.interactors.storages.dtos import *
+
+
+class PostCasesPresenterImplementation(PostCasesPresenterInterface):
+    def raise_invalid_cases_details(self):
+        raise BadRequest(*INVALID_CASES_DEATILS)
+
+    def post_cases_details_response(self, stats_dto: PostCasesDetailsDto):
+        return stats_dto.__dict__
+
+    def raise_invalid_mandal_id_exception(self):
+        raise NotFound(*INVALID_MANDAL)
+
+    def raise_date_already_existed(self):
+        raise BadRequest(*DATA_ALREADY_EXISTED)
 
 class PresenterImplementation(PresenterInterface):
 
 
     def raise_invalid_password_exception(self):
-        raise BadRequest(*INVALID_PASSWORD)
+        raise Unauthorized(*INVALID_PASSWORD)
 
     def raise_invalid_username_exception(self):
         raise NotFound(*INVALID_USER_NAME)
@@ -119,10 +133,8 @@ class PresenterImplementation(PresenterInterface):
     def raise_invalid_cases_details(self):
         raise BadRequest(*INVALID_CASES_DEATILS)
 
-    def post_cases_details_response(self, stats_dto: CasesDetailsDto):
-        return stats_dto.__dict__
 
-    def update_cases_details_response(self, stats_dto: CasesDetailsDto):
+    def update_cases_details_response(self, stats_dto: UpdateCasesDetailsDto):
         return stats_dto.__dict__
 
     def raise_invalid_mandal_id_exception(self):

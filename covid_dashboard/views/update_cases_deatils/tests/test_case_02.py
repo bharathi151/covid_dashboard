@@ -9,7 +9,7 @@ from covid_dashboard.models.cases_details import CasesDetails
 
 REQUEST_BODY = """
 {
-    "confirmed_cases": 1,
+    "confirmed_cases": 2,
     "deaths": 1,
     "recovered_cases": 1
 }

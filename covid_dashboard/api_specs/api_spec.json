@@ -844,6 +844,33 @@
                         "schema": {
                             "$ref": "#/definitions/StatsResponseForUpdateAndPost"
                         }
+                    },
+                    "400": {
+                        "description": "failure response",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "response": {
+                                    "type": "string"
+                                },
+                                "status_code": {
+                                    "type": "integer"
+                                },
+                                "response_status": {
+                                    "type": "string",
+                                    "enum": [
+                                        "Invalid MandalId",
+                                        "Data Already Registered",
+                                        "Inavalid CasesDetails"
+                                    ]
+                                }
+                            },
+                            "required": [
+                                "response",
+                                "status_code",
+                                "response_status"
+                            ]
+                        }
                     }
                 }
             }
@@ -871,6 +898,33 @@
                         "description": "Successful",
                         "schema": {
                             "$ref": "#/definitions/StatsResponseForUpdateAndPost"
+                        }
+                    },
+                    "400": {
+                        "description": "failure response",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "response": {
+                                    "type": "string"
+                                },
+                                "status_code": {
+                                    "type": "integer"
+                                },
+                                "response_status": {
+                                    "type": "string",
+                                    "enum": [
+                                        "Invalid MandalId",
+                                        "Data Not Registered",
+                                        "Inavalid CasesDetails"
+                                    ]
+                                }
+                            },
+                            "required": [
+                                "response",
+                                "status_code",
+                                "response_status"
+                            ]
                         }
                     }
                 }

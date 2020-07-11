@@ -1,5 +1,5 @@
 """
-Raise Data Alreay existed Exception when already data existed with that mandal_id and date
+Raise Data not existed Exception when no data existed with that mandal_id and date
 """
 
 from django_swagger_utils.utils.test import CustomAPITestCase
@@ -46,10 +46,12 @@ class TestCase02PostCasesDeatilsAPITestCase(CustomAPITestCase):
             username=username, password=password
         )
         mandal = MandalFactory()
-        CasesDetailsFactory.create(mandal=mandal, date=self.date, 
-                            confirmed_cases=self.confirmed_cases,
-                            recovered_cases=self.recovered_cases,
-                            deaths=self.deaths)
+        CasesDetailsFactory.create(
+            mandal=mandal, date=self.date, 
+            confirmed_cases=self.confirmed_cases,
+            recovered_cases=self.recovered_cases,
+            deaths=self.deaths
+        )
 
     def test_case(self):
         response = self.default_test_case()
