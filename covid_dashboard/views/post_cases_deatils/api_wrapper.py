@@ -4,7 +4,7 @@ from django.http import HttpResponse
 from django_swagger_utils.drf_server.utils.decorator.interface_decorator \
     import validate_decorator
 from .validator_class import ValidatorClass
-from covid_dashboard.interactors.post_cases_details_interactor import PostCasesDetailsInteractor
+from covid_dashboard.interactors.post_cases_details_interactor import PostAndUpdateCasesDetailsInteractor
 from covid_dashboard.presenters.presenter_implementation import PresenterImplementation
 from covid_dashboard.storages.user_storage_implementation import StorageImplementation
 
@@ -20,7 +20,7 @@ def api_wrapper(*args, **kwargs):
 
     storage = StorageImplementation()
     presenter = PresenterImplementation()
-    interactor = PostCasesDetailsInteractor(
+    interactor = PostAndUpdateCasesDetailsInteractor(
         storage = storage,
         presenter = presenter
     )

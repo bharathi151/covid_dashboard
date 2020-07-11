@@ -9,7 +9,7 @@ from covid_dashboard.models.cases_details import CasesDetails
 
 REQUEST_BODY = """
 {
-    "confirmed_cases": 1,
+    "confirmed_cases": 3,
     "deaths": 1,
     "recovered_cases": 1
 }
@@ -46,7 +46,13 @@ class TestCase01UpdateCasesDeatilsAPITestCase(CustomAPITestCase):
             username=username, password=password
         )
         mandal = MandalFactory()
-        CasesDetailsFactory.create(mandal=mandal, date=self.date)
+        CasesDetailsFactory.create(
+            mandal=mandal, date=self.date, 
+            confirmed_cases=5,
+            recovered_cases=2,
+            deaths=1
+        )
+        #CasesDetailsFactory.reset_sequence(0)
 
     def test_case(self):
         response = self.default_test_case()

@@ -24,11 +24,7 @@ class StorageInterface(ABC):
 
     @abstractmethod
     def post_cases_details(self,
-                           mandal_id: int,
-                           date: date,
-                           confirmed_cases:int,
-                           recovered_cases:int,
-                           deaths:int) -> int:
+                          cases_details_dto: CasesDetailsDto) -> PostCasesDetailsDto:
         pass
 
     @abstractmethod
@@ -40,11 +36,7 @@ class StorageInterface(ABC):
 
     @abstractmethod
     def update_cases_details(self,
-                           mandal_id: int,
-                           date: date,
-                           confirmed_cases:int,
-                           recovered_cases:int,
-                           deaths:int) -> CasesDetailsDto:
+                           cases_details_dto: CasesDetailsDto) -> PostCasesDetailsDto:
         pass
 
     @abstractmethod

@@ -33,10 +33,25 @@ class DayWiseCumulativeDto:
 class CasesDetailsDto:
     date: str
     mandal_id: int
+    confirmed_cases: int
+    recovered_cases: int
+    deaths: int
+
+@dataclass()
+class PostCasesDetailsDto:
+    date: str
+    mandal_id: int
     total_confirmed_cases: int
     total_recovered_cases: int
     total_deaths: int
 
+# @dataclass()
+# class UpdateCasesDetailsDto:
+#     date: str
+#     mandal_id: int
+#     total_confirmed_cases: int
+#     total_recovered_cases: int
+#     total_deaths: int
 
 @dataclass()
 class DayStats:

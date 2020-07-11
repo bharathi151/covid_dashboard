@@ -6,6 +6,23 @@ from common.dtos import UserAuthTokensDTO
 
 from covid_dashboard.interactors.storages.dtos import *
 
+class PostCasesPresenterInterface(ABC):
+    @abstractmethod
+    def raise_invalid_cases_details(self):
+        pass
+
+    @abstractmethod
+    def post_cases_details_response(self, stats_dto: PostCasesDetailsDto):
+        pass
+
+    @abstractmethod
+    def raise_invalid_mandal_id_exception(self):
+        pass
+
+    @abstractmethod
+    def raise_date_already_existed(self):
+        pass
+
 class PresenterInterface(ABC):
 
     @abstractmethod
@@ -20,11 +37,24 @@ class PresenterInterface(ABC):
     def get_log_in_user_response(self, tokens_dto: UserAuthTokensDTO):
         pass
 
-    # @abstractmethod
-    # def get_add_day_data_to_state_report_response(self, record_id: int):
-    #     pass
     @abstractmethod
     def raise_invalid_cases_details(self):
+        pass
+
+    @abstractmethod
+    def raise_invalid_mandal_id_exception(self):
+        pass
+
+    @abstractmethod
+    def update_cases_details_response(self, stats_dto: PostCasesDetailsDto):
+        pass
+
+    @abstractmethod
+    def raise_stats_not_existed(self):
+        pass
+
+    @abstractmethod
+    def raise_invalid_district_id_exception(self):
         pass
 
     @abstractmethod
@@ -43,30 +73,6 @@ class PresenterInterface(ABC):
     def get_day_wise_districts_cumulative_details_dto_response(
         self, districts_cumulative_dto: DayWiseDistrictCumulativeDtos
     ):
-        pass
-
-    @abstractmethod
-    def post_cases_details_response(self, stats_dto: CasesDetailsDto):
-        pass
-
-    @abstractmethod
-    def update_cases_details_response(self, stats_dto: CasesDetailsDto):
-        pass
-
-    @abstractmethod
-    def raise_invalid_mandal_id_exception(self):
-        pass
-
-    @abstractmethod
-    def raise_invalid_district_id_exception(self):
-        pass
-    
-    @abstractmethod
-    def raise_date_already_existed(self):
-        pass
-
-    @abstractmethod
-    def raise_stats_not_existed(self):
         pass
 
     @abstractmethod
